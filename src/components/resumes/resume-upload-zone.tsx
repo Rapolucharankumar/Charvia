@@ -2,7 +2,7 @@
 
 import { useCallback, useState } from "react";
 import { useDropzone } from "react-dropzone";
-import { Loader2 } from "lucide-react";
+import { Loader2, UploadCloud, FileText } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { saveResumeMetadata } from "@/app/(dashboard)/resumes/actions";
 import { motion, AnimatePresence } from "framer-motion";
@@ -45,8 +45,8 @@ export function ResumeUploadZone() {
         .from("resumes")
         .getPublicUrl(filePath);
 
-      // Delicate editorial narrative delay
-      await new Promise(resolve => setTimeout(resolve, 3000));
+      // Simulate analysis delay
+      await new Promise(resolve => setTimeout(resolve, 2000));
 
       await saveResumeMetadata(file.name, publicUrl);
 
@@ -66,69 +66,78 @@ export function ResumeUploadZone() {
   });
 
   return (
-    <div className="w-full max-w-4xl mx-auto py-24 px-4 md:px-12">
-      <div className="mb-24 text-center md:text-left">
-        <h2 className="text-xs uppercase tracking-[0.4em] text-stone-400 font-light mb-8">The Studio</h2>
-        <h1 className="text-5xl md:text-7xl font-playfair font-light text-stone-900 leading-[1.1] tracking-tight max-w-3xl">
-          Your next opportunity begins with a better resume.
+    <div className="w-full max-w-5xl mx-auto py-12 px-4 md:px-8">
+      
+      <div className="mb-10 text-center md:text-left">
+        <h1 className="text-4xl md:text-5xl font-playfair font-semibold text-foreground tracking-tight mb-4">
+          Resume Studio
         </h1>
-        <div className="mt-12 w-12 h-[1px] bg-stone-300 mx-auto md:mx-0" />
+        <p className="text-muted-foreground font-inter text-lg">
+          Upload your resume for a comprehensive AI-driven analysis.
+        </p>
       </div>
 
-      <div
-        {...getRootProps()}
-        className={`w-full relative min-h-[400px] transition-all duration-1000 ease-[cubic-bezier(0.16,1,0.3,1)] cursor-pointer flex flex-col items-center justify-center
-          ${isDragActive ? "bg-stone-100/50" : "hover:bg-stone-50/50"}
-          ${isUploading ? "pointer-events-none opacity-90" : ""}
-        `}
-      >
-        {/* Extremely delicate dotted border that only appears gently on hover or drag */}
-        <div className={`absolute inset-0 border border-stone-300 transition-all duration-1000 ${isDragActive ? 'border-solid border-stone-400' : 'border-dashed opacity-0 hover:opacity-100'}`} />
+      <div className="glass-card p-2 md:p-8">
+        <div
+          {...getRootProps()}
+          className={`w-full relative min-h-[400px] rounded-2xl border-2 transition-all duration-300 ease-out cursor-pointer flex flex-col items-center justify-center
+            ${isDragActive ? "border-primary bg-primary/5" : "border-dashed border-border hover:border-primary/50 hover:bg-muted/50"}
+            ${isUploading ? "pointer-events-none opacity-80" : ""}
+          `}
+        >
+          <input {...getInputProps()} />
 
-        <input {...getInputProps()} />
+          <AnimatePresence mode="wait">
+            {isUploading ? (
+              <motion.div 
+                key="uploading"
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.95 }}
+                transition={{ duration: 0.4 }}
+                className="flex flex-col items-center justify-center text-center max-w-md mx-auto"
+              >
+                <div className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center mb-6">
+                  <Loader2 className="w-8 h-8 text-primary animate-spin" strokeWidth={2} />
+                </div>
+                <h3 className="text-2xl font-inter font-semibold text-foreground mb-3">Analyzing document...</h3>
+                <p className="text-muted-foreground font-inter text-sm tracking-wide">Evaluating formatting, keywords, and structural integrity against ATS benchmarks.</p>
+              </motion.div>
+            ) : (
+              <motion.div 
+                key="idle"
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.95 }}
+                transition={{ duration: 0.4 }}
+                className="flex flex-col items-center justify-center text-center max-w-md mx-auto py-16"
+              >
+                <div className={`w-20 h-20 rounded-full flex items-center justify-center mb-8 transition-colors duration-300 ${isDragActive ? 'bg-primary text-white shadow-lg shadow-primary/30' : 'bg-muted text-muted-foreground group-hover:bg-primary/10 group-hover:text-primary'}`}>
+                  {isDragActive ? <UploadCloud className="w-8 h-8" /> : <FileText className="w-8 h-8" />}
+                </div>
+                <h3 className="text-2xl font-inter font-semibold text-foreground mb-3">
+                  {isDragActive ? "Drop to upload" : "Click or drag document here"}
+                </h3>
+                <p className="text-muted-foreground font-inter text-sm">
+                  We only accept <span className="font-semibold text-foreground">PDF</span> format to ensure accurate parsing.
+                </p>
+                <div className="mt-8 px-6 py-2 rounded-full bg-primary text-white text-sm font-medium shadow-sm transition-transform hover:scale-105">
+                  Browse Files
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
 
-        <AnimatePresence mode="wait">
-          {isUploading ? (
+          {error && (
             <motion.div 
-              key="uploading"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 1.5, ease: "easeInOut" }}
-              className="flex flex-col items-center justify-center text-center max-w-md mx-auto"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="absolute bottom-8 left-1/2 -translate-x-1/2 bg-destructive/10 px-4 py-2 rounded-lg"
             >
-              <Loader2 className="w-6 h-6 text-stone-400 animate-spin mb-10" strokeWidth={1} />
-              <h3 className="text-3xl font-playfair font-light italic text-stone-900 mb-6">Reviewing the narrative...</h3>
-              <p className="text-stone-500 font-inter text-sm font-light tracking-wide">Evaluating structural integrity against industry benchmarks.</p>
-            </motion.div>
-          ) : (
-            <motion.div 
-              key="idle"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 1.5, ease: "easeInOut" }}
-              className="flex flex-col items-center justify-center text-center max-w-md mx-auto py-16"
-            >
-              <h3 className="text-3xl font-playfair font-light text-stone-900 mb-6">
-                {isDragActive ? "Release to submit." : "Select or drop your document here."}
-              </h3>
-              <p className="text-stone-400 font-inter text-xs uppercase tracking-[0.2em] font-light">
-                PDF format is required.
-              </p>
+              <p className="text-sm font-medium text-destructive">{error}</p>
             </motion.div>
           )}
-        </AnimatePresence>
-
-        {error && (
-          <motion.div 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="absolute bottom-8 left-1/2 -translate-x-1/2"
-          >
-            <p className="text-xs uppercase tracking-[0.2em] font-light text-red-800">{error}</p>
-          </motion.div>
-        )}
+        </div>
       </div>
     </div>
   );

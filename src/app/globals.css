@@ -22,39 +22,39 @@
 }
 
 :root {
-  /* Luxury Editorial Palette */
-  --background: #FAFAF9; /* Warm Alabaster */
-  --foreground: #1C1917; /* Deep Charcoal */
+  /* Balanced Contrast Hybrid Palette */
+  --background: #F6F4F1; /* Warm Cream */
+  --foreground: #111827; /* Dark Slate */
   
   --card: #FFFFFF;
-  --card-foreground: #1C1917;
+  --card-foreground: #111827;
   
   --popover: #FFFFFF;
-  --popover-foreground: #1C1917;
+  --popover-foreground: #111827;
   
-  --primary: #1C1917; /* Deep Charcoal instead of Purple */
-  --primary-foreground: #FAFAF9;
+  --primary: #6D5DFB;
+  --primary-foreground: #FFFFFF;
   
-  --secondary: #A8A29E; /* Warm Stone instead of Cyan */
-  --secondary-foreground: #FFFFFF;
+  --secondary: #E5E7EB;
+  --secondary-foreground: #111827;
   
-  --muted: #F5F5F4;
-  --muted-foreground: #78716C;
+  --muted: #F3F4F6;
+  --muted-foreground: #6B7280;
   
-  --accent: #E7E5E4; /* Muted Champagne / Stone 200 */
-  --accent-foreground: #1C1917;
+  --accent: #FFB800;
+  --accent-foreground: #111827;
   
-  --success: #65a30d; /* Muted Sage / Lime 600 */
+  --success: #22C55E;
   --success-foreground: #FFFFFF;
   
-  --destructive: #9f1239; /* Deep Rose / Rose 800 */
+  --destructive: #EF4444;
   --destructive-foreground: #FFFFFF;
 
-  --border: #E7E5E4; /* Stone 200 */
-  --input: #E7E5E4;
-  --ring: rgba(28, 25, 23, 0.15); /* Charcoal with low opacity */
+  --border: #E5E7EB;
+  --input: #E5E7EB;
+  --ring: rgba(109, 93, 251, 0.3); /* Primary with opacity */
   
-  --radius: 0.5rem; /* Sharper, more editorial corners */
+  --radius: 1rem;
 }
 
 /* Remove dark mode completely to enforce light bright theme */
@@ -71,13 +71,13 @@
   }
 }
 
-/* Luxury Elegance Utilities */
+/* Premium Hybrid Utilities */
 @layer utilities {
   .glass {
-    @apply bg-white/90 backdrop-blur-2xl shadow-[0_8px_40px_-12px_rgba(28,25,23,0.08)];
+    @apply bg-white/95 backdrop-blur-3xl shadow-[0_4px_24px_-8px_rgba(17,24,39,0.08)];
   }
   .glass-card {
-    @apply bg-white border border-stone-100 shadow-[0_12px_60px_-15px_rgba(28,25,23,0.05)] transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)];
+    @apply bg-white rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_8px_30px_rgb(109,93,251,0.12)] transition-all duration-300;
   }
 }
 

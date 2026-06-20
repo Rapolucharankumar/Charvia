@@ -1,8 +1,9 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Briefcase, Calendar, Target, FileText } from "lucide-react";
 import Link from "next/link";
+import { useState, useEffect } from "react";
 
 interface DashboardClientProps {
   firstName: string;
@@ -20,13 +21,13 @@ export function DashboardClient({ firstName, stats }: DashboardClientProps) {
     hidden: { opacity: 0 },
     show: {
       opacity: 1,
-      transition: { staggerChildren: 0.2 }
+      transition: { staggerChildren: 0.1 }
     }
   };
 
   const item = {
-    hidden: { opacity: 0, y: 40 },
-    show: { opacity: 1, y: 0, transition: { duration: 1.2, ease: [0.16, 1, 0.3, 1] as const } }
+    hidden: { opacity: 0, y: 20 },
+    show: { opacity: 1, y: 0, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] as const } }
   };
 
   return (
@@ -34,75 +35,145 @@ export function DashboardClient({ firstName, stats }: DashboardClientProps) {
       variants={container}
       initial="hidden"
       animate="show"
-      className="flex flex-col gap-32 w-full max-w-4xl mx-auto py-24 px-4 md:px-12"
+      className="flex flex-col gap-10 w-full max-w-6xl mx-auto py-12 px-4 md:px-8"
     >
-      {/* 1. THE HOOK (HERO) */}
-      <motion.div variants={item} className="max-w-3xl">
-        <h1 className="text-5xl md:text-7xl font-playfair text-stone-900 leading-[1.1] tracking-tight font-light">
-          Good afternoon, {firstName}. <br />
-          <span className="italic">Your career trajectory is accelerating.</span>
-        </h1>
-        <div className="mt-12 w-12 h-[1px] bg-stone-300" />
-      </motion.div>
-
-      {/* 2. THE MOMENTUM (APPLICATIONS & INTERVIEWS) */}
-      <motion.div variants={item} className="flex flex-col md:flex-row gap-12 md:gap-24 items-start">
-        <div className="flex-1 space-y-8">
-          <p className="font-playfair text-3xl md:text-4xl leading-tight text-stone-800">
-            You are currently tracking <span className="italic font-medium">{stats.applications} active applications</span>. The momentum is palpable.
-          </p>
-          <p className="text-lg text-stone-500 font-inter leading-relaxed max-w-lg font-light tracking-wide">
-            This week alone, your activity has outpaced 85% of peers in your industry. Keep the pressure on, and prepare for the {stats.interviews} interviews on the horizon.
-          </p>
-          <Link href="/applications" className="inline-flex items-center gap-4 text-xs uppercase tracking-[0.2em] font-medium text-stone-900 hover:text-stone-500 transition-colors mt-8">
-            View Application Board <ArrowRight className="w-4 h-4" strokeWidth={1} />
-          </Link>
-        </div>
-      </motion.div>
-
-      {/* 3. THE READINESS CHAPTER */}
-      <motion.div variants={item} className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
-        <div className="order-2 md:order-1 space-y-8">
-          <h2 className="text-xs uppercase tracking-[0.3em] text-stone-400 font-light">Chapter 1 &mdash; Readiness</h2>
-          <p className="font-playfair text-3xl md:text-4xl leading-tight text-stone-800">
-            Your readiness score sits at a commanding <span className="italic">{stats.readiness}%</span>.
-          </p>
-          <p className="text-lg text-stone-500 font-inter leading-relaxed font-light tracking-wide">
-            Your foundational documents are solid, but perfection lies in the details. A minor adjustment to your primary resume could push you past the 90% threshold.
+      {/* HEADER SECTION */}
+      <motion.div variants={item} className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+        <div>
+          <h1 className="text-4xl md:text-5xl font-playfair font-semibold text-foreground tracking-tight">
+            Welcome back, {firstName}.
+          </h1>
+          <p className="text-muted-foreground font-inter mt-3 text-lg">
+            Here is your actionable career snapshot for today.
           </p>
         </div>
-        <div className="order-1 md:order-2 flex justify-end">
-          <div className="text-[12rem] md:text-[16rem] leading-none font-playfair font-light text-stone-200 tracking-tighter select-none -ml-8 md:ml-0 italic">
-            {stats.readiness}
-          </div>
-        </div>
+        <Link href="/resumes" className="inline-flex items-center gap-2 bg-primary text-white px-6 py-3 rounded-full font-medium shadow-sm hover:shadow-md hover:bg-primary/90 transition-all font-inter">
+          <FileText className="w-4 h-4" />
+          Analyze New Resume
+        </Link>
       </motion.div>
 
-      {/* 4. THE ACTIONABLE INSIGHTS */}
-      <motion.div variants={item} className="border-t border-stone-200 pt-24">
-        <h2 className="text-xs uppercase tracking-[0.3em] text-stone-400 font-light mb-16">The Next Move</h2>
+      {/* TOP METRICS ROW */}
+      <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
         
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-20">
-          <div className="space-y-6">
-            <h3 className="font-playfair text-3xl text-stone-900 italic">Refine Your Narrative.</h3>
-            <p className="text-stone-500 font-inter leading-relaxed font-light tracking-wide">
-              Your resume averages an ATS score of {stats.atsAvg}%. By optimizing for specific roles, you can ensure your story is heard by the right algorithms.
-            </p>
-            <Link href="/resumes" className="inline-flex items-center gap-4 text-xs uppercase tracking-[0.2em] font-medium text-stone-900 hover:text-stone-500 transition-colors mt-4">
-              Optimize Resumes <ArrowRight className="w-4 h-4" strokeWidth={1} />
+        {/* READINESS & ATS CARD (Takes up 8 columns) */}
+        <motion.div variants={item} className="md:col-span-8 glass-card p-8 flex flex-col justify-between">
+          <div className="flex items-center justify-between mb-8">
+            <h2 className="font-semibold font-inter text-lg text-foreground">Career Readiness</h2>
+            <Link href="/intro" className="text-sm font-medium text-primary hover:text-primary/80 transition-colors">
+              Improve Score &rarr;
             </Link>
           </div>
           
-          <div className="space-y-6">
-            <h3 className="font-playfair text-3xl text-stone-900 italic">Master the Delivery.</h3>
-            <p className="text-stone-500 font-inter leading-relaxed font-light tracking-wide">
-              A perfect resume gets you in the door. The interview secures the desk. Engage with our AI simulator to polish your delivery.
-            </p>
-            <Link href="/interviews" className="inline-flex items-center gap-4 text-xs uppercase tracking-[0.2em] font-medium text-stone-900 hover:text-stone-500 transition-colors mt-4">
-              Start Simulation <ArrowRight className="w-4 h-4" strokeWidth={1} />
+          <div className="flex flex-col md:flex-row items-center gap-12">
+            {/* Primary Readiness Ring */}
+            <div className="relative flex items-center justify-center">
+              <svg className="w-40 h-40 transform -rotate-90">
+                <circle cx="80" cy="80" r="70" stroke="currentColor" strokeWidth="12" fill="transparent" className="text-muted" />
+                <circle 
+                  cx="80" cy="80" r="70" stroke="currentColor" strokeWidth="12" fill="transparent" 
+                  strokeDasharray={440} strokeDashoffset={440 - (440 * stats.readiness) / 100}
+                  className="text-primary transition-all duration-1000 ease-out" 
+                  strokeLinecap="round" 
+                />
+              </svg>
+              <div className="absolute flex flex-col items-center justify-center">
+                <span className="text-4xl font-bold font-inter text-foreground">{stats.readiness}%</span>
+                <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider mt-1">Readiness</span>
+              </div>
+            </div>
+
+            <div className="flex-1 space-y-6 w-full">
+              <div>
+                <div className="flex justify-between items-end mb-2">
+                  <span className="text-sm font-medium text-muted-foreground">Average ATS Match</span>
+                  <span className="text-2xl font-bold text-foreground font-inter">{stats.atsAvg}%</span>
+                </div>
+                <div className="w-full bg-muted rounded-full h-3">
+                  <div className="bg-accent h-3 rounded-full transition-all duration-1000 ease-out" style={{ width: `${stats.atsAvg}%` }} />
+                </div>
+              </div>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                Your profile is in the top 15% of candidates. A slight boost to your ATS formatting will push you into the highly-recruited tier.
+              </p>
+            </div>
+          </div>
+        </motion.div>
+
+        {/* PIPELINE CARD (Takes up 4 columns) */}
+        <motion.div variants={item} className="md:col-span-4 glass-card p-8 flex flex-col">
+          <h2 className="font-semibold font-inter text-lg text-foreground mb-8">Active Pipeline</h2>
+          
+          <div className="space-y-6 flex-1">
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 rounded-2xl bg-blue-50 flex items-center justify-center shrink-0">
+                <Briefcase className="w-6 h-6 text-blue-600" />
+              </div>
+              <div className="flex-1">
+                <p className="text-sm font-medium text-muted-foreground">Applications</p>
+                <p className="text-2xl font-bold font-inter text-foreground">{stats.applications}</p>
+              </div>
+            </div>
+            
+            <div className="w-full h-[1px] bg-border" />
+            
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 rounded-2xl bg-accent/10 flex items-center justify-center shrink-0">
+                <Calendar className="w-6 h-6 text-accent" />
+              </div>
+              <div className="flex-1">
+                <p className="text-sm font-medium text-muted-foreground">Interviews</p>
+                <p className="text-2xl font-bold font-inter text-foreground">{stats.interviews}</p>
+              </div>
+            </div>
+          </div>
+        </motion.div>
+
+      </div>
+
+      {/* BOTTOM ROW - NEXT ACTION */}
+      <motion.div variants={item} className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        
+        {/* Next Action Highlight */}
+        <div className="glass-card p-8 bg-gradient-to-br from-primary to-[#5143d9] text-white overflow-hidden relative">
+          <div className="absolute top-0 right-0 p-8 opacity-10">
+            <Target className="w-32 h-32" />
+          </div>
+          <div className="relative z-10 h-full flex flex-col justify-between">
+            <div>
+              <span className="inline-block px-3 py-1 bg-white/20 rounded-full text-xs font-semibold tracking-wider uppercase mb-6 backdrop-blur-md">
+                Next Recommended Action
+              </span>
+              <h3 className="text-3xl font-playfair font-semibold mb-4 leading-tight">Prepare for your upcoming interview.</h3>
+              <p className="text-white/80 font-inter text-sm max-w-sm leading-relaxed mb-8">
+                You have an upcoming interview scheduled. Engage with our AI simulator to refine your delivery and secure the offer.
+              </p>
+            </div>
+            <Link href="/interviews" className="inline-flex items-center gap-2 bg-white text-primary px-6 py-3 rounded-xl font-semibold shadow-sm hover:bg-gray-50 transition-colors w-fit">
+              Start Simulation <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
         </div>
+
+        {/* Secondary Info / Match */}
+        <div className="glass-card p-8 flex flex-col justify-between">
+          <div>
+            <h3 className="font-semibold font-inter text-lg text-foreground mb-4">Job Match Engine</h3>
+            <p className="text-muted-foreground text-sm font-inter leading-relaxed mb-6">
+              Our AI is constantly scanning the market for roles that align with your updated resume and skill profile.
+            </p>
+          </div>
+          <div className="p-6 rounded-2xl bg-muted border border-border">
+            <div className="flex justify-between items-center mb-4">
+              <span className="font-medium text-sm text-foreground">Matches Found</span>
+              <span className="text-xs font-bold text-success bg-success/10 px-2 py-1 rounded-md">12 New</span>
+            </div>
+            <Link href="/match" className="block w-full text-center text-sm font-medium text-foreground bg-white border border-border rounded-xl py-2.5 hover:bg-gray-50 transition-colors">
+              Review Matches
+            </Link>
+          </div>
+        </div>
+
       </motion.div>
 
     </motion.div>

@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { ArrowRight, CheckCircle2, AlertTriangle, ShieldCheck, Download } from "lucide-react";
 
 interface AnalysisReportProps {
   analysis: {
@@ -16,7 +17,7 @@ interface AnalysisReportProps {
 }
 
 export function AnalysisReport({ analysis }: AnalysisReportProps) {
-  const { atsScore, missingKeywords, weaknesses } = analysis.feedback;
+  const { atsScore, missingKeywords, weaknesses, strengths, suggestions } = analysis.feedback;
 
   // Simulate Optimized Score
   const optimizedScore = Math.min(100, atsScore + 26);
@@ -25,140 +26,146 @@ export function AnalysisReport({ analysis }: AnalysisReportProps) {
     hidden: { opacity: 0 },
     show: {
       opacity: 1,
-      transition: { staggerChildren: 0.3 }
+      transition: { staggerChildren: 0.1 }
     }
   };
 
   const item = {
-    hidden: { opacity: 0, y: 40 },
-    show: { opacity: 1, y: 0, transition: { duration: 1.5, ease: [0.16, 1, 0.3, 1] as const } }
+    hidden: { opacity: 0, y: 20 },
+    show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] as const } }
   };
 
   return (
-    <motion.div variants={container} initial="hidden" animate="show" className="w-full max-w-4xl mx-auto py-24 space-y-40">
+    <motion.div variants={container} initial="hidden" animate="show" className="w-full max-w-6xl mx-auto py-12 px-4 md:px-8 space-y-8">
       
-      {/* HEADER */}
-      <motion.div variants={item} className="text-center md:text-left px-4 md:px-12">
-        <h1 className="text-5xl md:text-7xl font-playfair font-light text-stone-900 leading-[1.1] tracking-tight">
-          The Transformation.
-        </h1>
-        <div className="mt-12 w-12 h-[1px] bg-stone-300 mx-auto md:mx-0" />
-        <p className="text-lg text-stone-500 mt-12 font-inter max-w-xl font-light tracking-wide mx-auto md:mx-0">
-          An in-depth analysis of your foundational document and the steps taken to elevate it to industry standards.
-        </p>
-      </motion.div>
-
-      {/* CHAPTER 1: BASELINE */}
-      <motion.div variants={item} className="relative">
-        <div className="absolute left-0 top-0 w-[1px] h-full bg-stone-200 hidden md:block" />
-        <div className="px-4 md:pl-24 md:pr-0">
-          <h2 className="text-xs uppercase tracking-[0.4em] text-stone-400 font-light mb-12">Chapter I &mdash; The Baseline</h2>
-          <div className="flex flex-col md:flex-row items-baseline gap-12">
-            <span className="text-[10rem] md:text-[14rem] leading-none font-playfair font-light text-stone-200 tracking-tighter select-none italic">
-              {atsScore}
-            </span>
-            <div className="max-w-md mt-8 md:mt-0">
-              <h3 className="font-playfair text-3xl text-stone-900 mb-6 italic">Where you started.</h3>
-              <p className="text-stone-500 font-inter leading-relaxed font-light tracking-wide">
-                Your initial document possessed strong foundational elements but lacked the keyword density and structural rigor required to reliably pass modern applicant tracking systems. 
-              </p>
-            </div>
-          </div>
+      {/* HEADER SECTION */}
+      <motion.div variants={item} className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-4">
+        <div>
+          <h1 className="text-4xl md:text-5xl font-playfair font-semibold text-foreground tracking-tight">
+            ATS Transformation
+          </h1>
+          <p className="text-muted-foreground font-inter mt-3 text-lg">
+            We've analyzed and upgraded your resume. Here are the results.
+          </p>
         </div>
+        <button className="inline-flex items-center gap-2 bg-foreground text-white px-6 py-3 rounded-xl font-medium shadow-sm hover:shadow-md hover:bg-foreground/90 transition-all font-inter">
+          <Download className="w-4 h-4" />
+          Download Optimized PDF
+        </button>
       </motion.div>
 
-      {/* CHAPTER 2: DEEP DIVE */}
-      <motion.div variants={item} className="relative">
-        <div className="absolute left-0 top-0 w-[1px] h-full bg-stone-200 hidden md:block" />
-        <div className="px-4 md:pl-24 md:pr-0">
-          <h2 className="text-xs uppercase tracking-[0.4em] text-stone-400 font-light mb-12">Chapter II &mdash; The Deep Dive</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-20">
-            <div>
-              <h3 className="font-playfair text-3xl text-stone-900 mb-8">Missing Lexicon</h3>
-              <p className="text-stone-500 font-inter leading-relaxed font-light tracking-wide mb-10">
-                The algorithm identified critical gaps in terminology. Missing these terms signals a lack of alignment with the target role.
-              </p>
-              <div className="flex flex-wrap gap-4">
+      {/* SCORE CARDS GRID */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        
+        {/* BEFORE CARD */}
+        <motion.div variants={item} className="glass-card p-8 md:p-10 relative overflow-hidden bg-white">
+          <div className="absolute top-0 right-0 p-8 opacity-[0.03]">
+            <AlertTriangle className="w-40 h-40" />
+          </div>
+          <div className="relative z-10 flex flex-col h-full">
+            <h2 className="text-sm uppercase tracking-wider text-muted-foreground font-semibold mb-6">Original Analysis</h2>
+            <div className="flex items-center gap-8 mb-8">
+              <span className="text-7xl font-bold font-inter text-foreground">
+                {atsScore}
+              </span>
+              <div className="space-y-1">
+                <p className="font-semibold text-lg text-foreground">Baseline Score</p>
+                <p className="text-sm text-muted-foreground">Lacking critical keywords</p>
+              </div>
+            </div>
+            
+            <div className="w-full h-px bg-border mb-6" />
+            
+            <div className="flex-1">
+              <h3 className="font-semibold text-foreground mb-4">Missing Lexicon</h3>
+              <div className="flex flex-wrap gap-2">
                 {missingKeywords.length === 0 ? (
-                  <span className="text-sm font-light font-inter text-stone-400 italic">No critical keywords missing.</span>
+                  <span className="text-sm text-muted-foreground italic">No critical keywords missing.</span>
                 ) : (
-                  missingKeywords.map((kw, i) => (
-                    <span key={i} className="text-xs uppercase tracking-[0.1em] font-light font-inter px-4 py-2 border border-stone-200 text-stone-600">
+                  missingKeywords.slice(0, 6).map((kw, i) => (
+                    <span key={i} className="text-xs font-medium px-3 py-1.5 bg-muted text-muted-foreground rounded-lg border border-border">
                       {kw}
                     </span>
                   ))
                 )}
               </div>
             </div>
-            
-            <div>
-              <h3 className="font-playfair text-3xl text-stone-900 mb-8">Structural Flaws</h3>
-              <div className="w-12 h-[1px] bg-stone-200 mb-8" />
-              <ul className="space-y-6">
-                {weaknesses.slice(0, 3).map((w, i) => (
-                  <li key={i} className="text-stone-500 font-inter leading-relaxed text-sm font-light tracking-wide">
-                    {w}
-                  </li>
-                ))}
-              </ul>
-            </div>
           </div>
-        </div>
-      </motion.div>
+        </motion.div>
 
-      {/* CHAPTER 3: THE POLISH */}
-      <motion.div variants={item} className="relative bg-stone-100 py-24 -mx-4 md:-mx-12 px-8 md:px-36">
-        <h2 className="text-xs uppercase tracking-[0.4em] text-stone-400 font-light mb-16 text-center">Chapter III &mdash; The Polish</h2>
-        <h3 className="font-playfair text-4xl text-stone-900 mb-16 text-center italic">How we refined the narrative.</h3>
-        
-        <div className="space-y-16 max-w-2xl mx-auto">
-          {[
-            "Restructured the professional summary to highlight quantifiable achievements rather than generic responsibilities.",
-            "Injected high-value industry keywords organically into experience descriptions.",
-            "Realigned formatting to ensure perfect parsing by automated HR systems."
-          ].map((polish, i) => (
-            <div key={i} className="text-center">
-              <p className="text-xl md:text-2xl text-stone-700 font-playfair font-light leading-relaxed">
-                "{polish}"
-              </p>
-            </div>
-          ))}
-        </div>
-      </motion.div>
-
-      {/* CHAPTER 4: OUTCOME */}
-      <motion.div variants={item} className="relative">
-        <div className="absolute left-0 top-0 w-[1px] h-full bg-stone-900 hidden md:block" />
-        <div className="px-4 md:pl-24 md:pr-0">
-          <h2 className="text-xs uppercase tracking-[0.4em] text-stone-900 font-bold mb-12">Chapter IV &mdash; The Outcome</h2>
-          <h3 className="font-playfair text-5xl md:text-6xl font-light text-stone-900 mb-20 leading-tight">
-            Your new competitive edge.
-          </h3>
-          <div className="flex flex-col md:flex-row items-center gap-16 md:gap-24">
-            <div className="text-center md:text-left">
-              <span className="text-[12rem] md:text-[16rem] leading-none font-playfair font-light text-stone-900 tracking-tighter select-none">
+        {/* AFTER CARD */}
+        <motion.div variants={item} className="glass-card p-8 md:p-10 relative overflow-hidden bg-primary/5 border-primary/20">
+          <div className="absolute top-0 right-0 p-8 opacity-[0.05] text-primary">
+            <ShieldCheck className="w-40 h-40" />
+          </div>
+          <div className="relative z-10 flex flex-col h-full">
+            <h2 className="text-sm uppercase tracking-wider text-primary font-bold mb-6">Optimized Result</h2>
+            <div className="flex items-center gap-8 mb-8">
+              <span className="text-7xl font-bold font-inter text-primary">
                 {optimizedScore}
               </span>
-              <p className="text-xs uppercase tracking-[0.3em] font-medium text-stone-400 mt-8">Optimized Score</p>
+              <div className="space-y-1">
+                <p className="font-semibold text-lg text-foreground">New ATS Match</p>
+                <p className="text-sm text-muted-foreground">Top decile of applicants</p>
+              </div>
             </div>
-            <div className="flex-1">
-              <div className="w-12 h-[1px] bg-stone-300 mb-8" />
-              <p className="text-2xl text-stone-600 font-playfair leading-relaxed italic max-w-sm">
-                You are now positioned in the top decile of applicants. The friction between your talent and the recruiter's screen has been eliminated.
-              </p>
+            
+            <div className="w-full h-px bg-primary/20 mb-6" />
+            
+            <div className="flex-1 space-y-4">
+              <h3 className="font-semibold text-foreground mb-2">Enhancements Made</h3>
+              {[
+                "Restructured summary for quantifiable impact",
+                "Injected high-value industry keywords",
+                "Realigned formatting for perfect parsing"
+              ].map((polish, i) => (
+                <div key={i} className="flex gap-3 items-start">
+                  <CheckCircle2 className="w-5 h-5 text-success shrink-0 mt-0.5" />
+                  <p className="text-sm text-foreground font-medium">
+                    {polish}
+                  </p>
+                </div>
+              ))}
             </div>
           </div>
-        </div>
-      </motion.div>
+        </motion.div>
 
-      {/* CONCLUSION (DOWNLOAD CTA) */}
-      <motion.div variants={item} className="text-center pt-32">
-        <h2 className="text-4xl md:text-5xl font-playfair font-light text-stone-900 mb-16 italic">
-          Your optimized story is ready.
-        </h2>
-        <button className="inline-flex items-center justify-center px-12 py-6 bg-stone-900 text-stone-50 hover:bg-stone-800 transition-colors duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] min-w-[280px]">
-          <span className="text-xs uppercase tracking-[0.3em] font-light">Download Document</span>
-        </button>
+      </div>
+
+      {/* DETAILS CARD */}
+      <motion.div variants={item} className="glass-card p-8 md:p-10">
+        <h2 className="text-xl font-semibold text-foreground mb-8">Structural Breakdown</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+          
+          <div>
+            <h3 className="font-medium text-foreground mb-6 flex items-center gap-2">
+              <div className="w-2 h-2 rounded-full bg-destructive" />
+              Identified Flaws
+            </h3>
+            <ul className="space-y-4">
+              {weaknesses.slice(0, 4).map((w, i) => (
+                <li key={i} className="text-sm text-muted-foreground leading-relaxed pl-4 border-l-2 border-border">
+                  {w}
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div>
+            <h3 className="font-medium text-foreground mb-6 flex items-center gap-2">
+              <div className="w-2 h-2 rounded-full bg-success" />
+              Retained Strengths
+            </h3>
+            <ul className="space-y-4">
+              {strengths.slice(0, 4).map((s, i) => (
+                <li key={i} className="text-sm text-muted-foreground leading-relaxed pl-4 border-l-2 border-border">
+                  {s}
+                </li>
+              ))}
+            </ul>
+          </div>
+
+        </div>
       </motion.div>
 
     </motion.div>
