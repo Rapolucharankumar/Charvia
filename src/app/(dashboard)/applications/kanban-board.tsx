@@ -15,13 +15,13 @@ interface KanbanBoardProps {
   onAdd: (status: ApplicationStatus) => void;
 }
 
-const STAGES: { id: ApplicationStatus; title: string; color: string }[] = [
-  { id: "APPLIED", title: "Applied", color: "bg-blue-500/10 border-blue-500/20" },
-  { id: "ASSESSMENT", title: "Assessment", color: "bg-orange-500/10 border-orange-500/20" },
-  { id: "INTERVIEW", title: "Interview", color: "bg-purple-500/10 border-purple-500/20" },
-  { id: "HR_ROUND", title: "HR Round", color: "bg-pink-500/10 border-pink-500/20" },
-  { id: "OFFER", title: "Offer", color: "bg-green-500/10 border-green-500/20" },
-  { id: "REJECTED", title: "Rejected", color: "bg-red-500/10 border-red-500/20" },
+const STAGES: { id: ApplicationStatus; title: string; color: string; border: string }[] = [
+  { id: "APPLIED", title: "Applied", color: "text-blue-500", border: "border-l-blue-500" },
+  { id: "ASSESSMENT", title: "Assessment", color: "text-orange-500", border: "border-l-orange-500" },
+  { id: "INTERVIEW", title: "Interview", color: "text-purple-500", border: "border-l-purple-500" },
+  { id: "HR_ROUND", title: "HR Round", color: "text-pink-500", border: "border-l-pink-500" },
+  { id: "OFFER", title: "Offer", color: "text-green-500", border: "border-l-green-500" },
+  { id: "REJECTED", title: "Rejected", color: "text-red-500", border: "border-l-red-500" },
 ];
 
 export function KanbanBoard({ initialData, onAdd }: KanbanBoardProps) {
@@ -106,10 +106,10 @@ export function KanbanBoard({ initialData, onAdd }: KanbanBoardProps) {
       <div className="flex gap-4 overflow-x-auto pb-4 h-[calc(100vh-200px)] items-start">
         <DragDropContext onDragEnd={onDragEnd}>
           {STAGES.map((stage) => (
-            <div key={stage.id} className="min-w-[300px] w-[300px] flex-shrink-0 bg-muted/30 rounded-lg p-3 border">
+            <div key={stage.id} className="min-w-[320px] w-[320px] flex-shrink-0 bg-slate-50/80 rounded-2xl p-4 border border-slate-100 shadow-sm flex flex-col">
               <div className="flex items-center justify-between mb-4 px-1">
-                <h3 className="font-semibold">{stage.title}</h3>
-                <span className="text-xs bg-muted text-muted-foreground px-2 py-1 rounded-full font-medium">
+                <h3 className={`font-bold text-sm uppercase tracking-wider ${stage.color}`}>{stage.title}</h3>
+                <span className="text-xs bg-white text-slate-500 px-2.5 py-1 rounded-full font-bold shadow-sm border border-slate-100">
                   {getApplicationsByStatus(stage.id).length}
                 </span>
               </div>
@@ -133,7 +133,7 @@ export function KanbanBoard({ initialData, onAdd }: KanbanBoardProps) {
                             className={`${snapshot.isDragging ? "z-50" : ""}`}
                             style={{ ...provided.draggableProps.style }}
                           >
-                            <Card className={`border shadow-sm hover:shadow-md transition-shadow cursor-grab active:cursor-grabbing ${stage.color}`}>
+                            <Card className={`border-none shadow-sm hover:shadow-md transition-all cursor-grab active:cursor-grabbing bg-white rounded-xl border-l-4 ${stage.border}`}>
                               <CardContent className="p-4 flex flex-col gap-2">
                                 <div className="flex justify-between items-start">
                                   <div className="font-medium leading-none line-clamp-1">{app.jobTitle}</div>

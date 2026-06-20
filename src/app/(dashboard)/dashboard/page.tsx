@@ -1,106 +1,60 @@
-"use client";
+import { createClient } from "@/lib/supabase/server";
+import { redirect } from "next/navigation";
+import prisma from "@/lib/prisma";
+import { DashboardClient } from "./dashboard-client";
 
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { motion } from "framer-motion";
-import { Activity, Briefcase, FileText, Target } from "lucide-react";
+export default async function DashboardPage() {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
 
-export default function DashboardPage() {
-  const container = {
-    hidden: { opacity: 0 },
-    show: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1
-      }
+  if (!user) {
+    redirect("/login");
+  }
+
+  // Fetch real data
+  const dbUser = await prisma.user.findUnique({
+    where: { id: user.id },
+    include: {
+      applications: true,
+      resumes: {
+        include: { analyses: true }
+      },
+      interviewSessions: true,
     }
-  };
+  });
 
-  const item = {
-    hidden: { opacity: 0, y: 20 },
-    show: { opacity: 1, y: 0, transition: { type: "spring" as const, stiffness: 300, damping: 24 } }
+  const firstName = dbUser?.firstName || user.email?.split('@')[0] || "User";
+  const applicationsCount = dbUser?.applications.length || 0;
+  const resumesCount = dbUser?.resumes.length || 0;
+  const interviewsCount = dbUser?.interviewSessions.length || 0;
+
+  // Calculate Average ATS Score
+  let totalScore = 0;
+  let scoreCount = 0;
+  dbUser?.resumes.forEach(resume => {
+    resume.analyses.forEach(analysis => {
+      if (analysis.overallScore) {
+        totalScore += analysis.overallScore;
+        scoreCount++;
+      }
+    });
+  });
+  const avgAtsScore = scoreCount > 0 ? Math.round(totalScore / scoreCount) : 0;
+  
+  // Calculate a "Readiness Score" based on activity
+  const readinessScore = Math.min(100, Math.round((avgAtsScore * 0.5) + (applicationsCount * 5) + (interviewsCount * 10)) || 25);
+
+  const stats = {
+    applications: applicationsCount,
+    interviews: interviewsCount,
+    resumes: resumesCount,
+    readiness: readinessScore,
+    atsAvg: avgAtsScore,
   };
 
   return (
-    <motion.div 
-      variants={container}
-      initial="hidden"
-      animate="show"
-      className="flex flex-col gap-6"
-    >
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-        {/* Metric Cards */}
-        {[
-          { title: "Total Applications", value: "12", desc: "+2 from last week", icon: Briefcase, color: "text-blue-400" },
-          { title: "Interviews Scheduled", value: "3", desc: "+1 from last week", icon: Target, color: "text-green-400" },
-          { title: "Resumes Created", value: "2", desc: "ATS Score: 85%", icon: FileText, color: "text-purple-400" },
-          { title: "Profile Views", value: "42", desc: "+19% from last month", icon: Activity, color: "text-orange-400" },
-        ].map((metric, i) => (
-          <motion.div key={i} variants={item} whileHover={{ y: -5 }} className="block">
-            <Card className="glass-card h-full border-white/5 relative overflow-hidden group">
-              <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 relative z-10">
-                <CardTitle className="text-sm font-medium text-muted-foreground">
-                  {metric.title}
-                </CardTitle>
-                <metric.icon className={`h-4 w-4 ${metric.color}`} />
-              </CardHeader>
-              <CardContent className="relative z-10">
-                <div className="text-3xl font-bold">{metric.value}</div>
-                <p className="text-xs text-muted-foreground mt-1">
-                  {metric.desc}
-                </p>
-              </CardContent>
-            </Card>
-          </motion.div>
-        ))}
-      </div>
-
-      <div className="grid gap-6 md:gap-8 lg:grid-cols-2 xl:grid-cols-3">
-        <motion.div variants={item} className="xl:col-span-2 block">
-          <Card className="glass-card h-full border-white/5 overflow-hidden relative">
-            <div className="absolute top-0 right-0 w-64 h-64 bg-primary/10 rounded-full blur-[80px] -z-10" />
-            <CardHeader className="flex flex-row items-center">
-              <div className="grid gap-1">
-                <CardTitle>Recent Activity</CardTitle>
-                <CardDescription>
-                  Your latest job applications and updates.
-                </CardDescription>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className="flex flex-col items-center justify-center py-12 text-center space-y-3">
-                <div className="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center">
-                  <Activity className="h-5 w-5 text-muted-foreground" />
-                </div>
-                <p className="text-sm text-muted-foreground">No recent activity found. Start applying!</p>
-              </div>
-            </CardContent>
-          </Card>
-        </motion.div>
-
-        <motion.div variants={item} className="block">
-          <Card className="glass-card h-full border-white/5 overflow-hidden relative">
-            <div className="absolute top-0 right-0 w-64 h-64 bg-blue-500/10 rounded-full blur-[80px] -z-10" />
-            <CardHeader>
-              <CardTitle>Upcoming Interviews</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="flex flex-col items-center justify-center py-12 text-center space-y-3">
-                <div className="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center">
-                  <Target className="h-5 w-5 text-muted-foreground" />
-                </div>
-                <p className="text-sm text-muted-foreground">You have no upcoming interviews.</p>
-              </div>
-            </CardContent>
-          </Card>
-        </motion.div>
-      </div>
-    </motion.div>
+    <div className="flex-1 p-6 md:p-12 w-full">
+      <DashboardClient firstName={firstName} stats={stats} />
+    </div>
   );
 }
