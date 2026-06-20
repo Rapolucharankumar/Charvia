@@ -8,7 +8,7 @@ import Image from "next/image";
 import { cn } from "@/lib/utils";
 
 interface MobileNavProps {
-  items: { title: string; href: string; icon: React.ElementType }[];
+  items: { title: string; href: string; icon?: React.ElementType }[];
   title?: string;
 }
 
@@ -43,7 +43,7 @@ export function MobileNav({ items, title = "Menu" }: MobileNavProps) {
                   isActive ? "bg-muted text-primary" : ""
                 )}
               >
-                <item.icon className="h-5 w-5" />
+                {item.icon && <item.icon className="h-5 w-5" />}
                 {item.title}
               </Link>
             );
