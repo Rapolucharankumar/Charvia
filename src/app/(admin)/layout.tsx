@@ -2,13 +2,14 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import prisma from "@/lib/prisma";
 import Link from "next/link";
-import { LayoutDashboard, Users, ShieldAlert, Settings } from "lucide-react";
+import { LayoutDashboard, Users, ShieldAlert, Settings, Target } from "lucide-react";
 import Image from "next/image";
 import { MobileNav } from "@/components/layout/mobile-nav";
 
 const adminNavItems = [
   { title: "Overview", href: "/admin", icon: LayoutDashboard },
   { title: "Users", href: "/admin/users", icon: Users },
+  { title: "Waitlist", href: "/admin/waitlist", icon: Target },
   { title: "Exit to App", href: "/dashboard", icon: Settings },
 ];
 

@@ -152,3 +152,14 @@ enum PlanType {
   FREE
   PRO
 }
+
+model EarlyAccessWaitlist {
+  id             String   @id @default(uuid()) @db.Uuid
+  name           String
+  email          String   @unique
+  college        String?
+  graduationYear String?
+  createdAt      DateTime @default(now())
+
+  @@map("early_access_waitlist")
+}

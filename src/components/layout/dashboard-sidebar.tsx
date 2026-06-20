@@ -10,9 +10,15 @@ import {
   CheckSquare,
   Settings,
   LogOut,
+  Map,
+  Lock,
+  Sparkles
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { logout } from "@/app/(auth)/actions";
+import { useState } from "react";
+import { ProModal } from "@/components/pro-modal";
+import { Button } from "@/components/ui/button";
 
 export const sidebarNavItems = [
   {
@@ -49,14 +55,28 @@ export const sidebarNavItems = [
     title: "Settings",
     href: "/settings",
     icon: Settings,
+    isLocked: false,
+  },
+  {
+    title: "Premium Templates",
+    href: "#premium-templates",
+    icon: FileText,
+    isLocked: true,
+  },
+  {
+    title: "Career Roadmap",
+    href: "#career-roadmap",
+    icon: Map,
+    isLocked: true,
   },
 ];
 
 export function DashboardSidebar() {
   const pathname = usePathname();
+  const [isProModalOpen, setIsProModalOpen] = useState(false);
 
   return (
-    <nav className="hidden border-r bg-muted/40 md:block w-64 min-h-screen shrink-0">
+    <nav className="hidden border-r bg-muted/40 md:block w-64 min-h-screen shrink-0 relative">
       <div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6">
         <Link href="/" className="flex items-center gap-2 font-semibold">
           <Image src="/logo.svg" alt="Charvia Logo" width={24} height={24} className="rounded-sm" />
@@ -68,22 +88,44 @@ export function DashboardSidebar() {
           {sidebarNavItems.map((item) => {
             const isActive = pathname === item.href;
             return (
-              <Link
+              <button
                 key={item.title}
-                href={item.href}
+                onClick={(e) => {
+                  if (item.isLocked) {
+                    e.preventDefault();
+                    setIsProModalOpen(true);
+                  } else {
+                    window.location.href = item.href;
+                  }
+                }}
                 className={cn(
-                  "flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary",
+                  "flex items-center justify-between rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary",
                   isActive ? "bg-muted text-primary" : ""
                 )}
               >
-                <item.icon className="h-4 w-4" />
-                {item.title}
-              </Link>
+                <div className="flex items-center gap-3">
+                  <item.icon className="h-4 w-4" />
+                  {item.title}
+                </div>
+                {item.isLocked && <Lock className="h-3 w-3 text-yellow-500" />}
+              </button>
             );
           })}
         </nav>
       </div>
-      <div className="mt-auto p-4 border-t">
+      <div className="mt-auto p-4 border-t space-y-4">
+        <div 
+          onClick={() => setIsProModalOpen(true)}
+          className="w-full relative overflow-hidden rounded-xl bg-gradient-to-br from-primary/10 to-purple-500/10 border border-primary/20 p-4 cursor-pointer hover:border-primary/40 transition-colors group"
+        >
+          <div className="absolute inset-0 bg-primary/5 group-hover:bg-primary/10 transition-colors" />
+          <div className="flex items-center gap-2 mb-2">
+            <Sparkles className="w-4 h-4 text-primary" />
+            <span className="font-semibold text-sm">Upgrade to Pro</span>
+          </div>
+          <p className="text-xs text-muted-foreground mb-3">Unlock unlimited AI tools and premium templates.</p>
+        </div>
+
         <form action={logout}>
           <button
             type="submit"
@@ -94,6 +136,7 @@ export function DashboardSidebar() {
           </button>
         </form>
       </div>
+      <ProModal isOpen={isProModalOpen} onClose={() => setIsProModalOpen(false)} />
     </nav>
   );
 }
