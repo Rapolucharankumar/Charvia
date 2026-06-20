@@ -7,6 +7,8 @@ import { ArrowLeft, ExternalLink } from "lucide-react";
 import Link from "next/link";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { formatDistanceToNow } from "date-fns";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { OptimizationView } from "@/components/resumes/optimization-view";
 
 export default async function ResumeDetailsPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -24,6 +26,10 @@ export default async function ResumeDetailsPage({ params }: { params: Promise<{ 
       include: {
         analyses: {
           orderBy: { createdAt: 'desc' }
+        },
+        optimizations: {
+          orderBy: { createdAt: 'desc' },
+          take: 1,
         }
       }
     });
@@ -37,6 +43,7 @@ export default async function ResumeDetailsPage({ params }: { params: Promise<{ 
   }
 
   const latestAnalysis = resume.analyses[0];
+  const latestOptimization = resume.optimizations[0];
 
   return (
     <div className="flex-1 space-y-8 p-8 pt-6">
@@ -70,48 +77,68 @@ export default async function ResumeDetailsPage({ params }: { params: Promise<{ 
         </div>
       </div>
 
-      <div>
-        {latestAnalysis ? (
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <h3 className="text-xl font-semibold">Latest Analysis Report</h3>
-              <p className="text-sm text-muted-foreground">
-                Generated {formatDistanceToNow(new Date(latestAnalysis.createdAt), { addSuffix: true })}
-              </p>
-            </div>
-            <AnalysisReport analysis={latestAnalysis as any} />
-          </div>
-        ) : (
-          <div className="flex flex-col items-center justify-center h-64 border-2 border-dashed rounded-xl bg-muted/20">
-            <div className="text-center max-w-sm space-y-4">
-              <h3 className="text-lg font-semibold">No Analysis Yet</h3>
-              <p className="text-sm text-muted-foreground">
-                We haven't analyzed this resume yet. Click the button below to have our AI review your resume against ATS standards.
-              </p>
-              <AnalyzeButton resumeId={resume.id} isAnalyzingDisabled={false} />
-            </div>
-          </div>
-        )}
-      </div>
-
-      {resume.analyses.length > 1 && (
-        <div className="pt-8 border-t">
-          <h3 className="text-lg font-semibold mb-4">Past Analyses</h3>
-          <div className="space-y-4">
-            {resume.analyses.slice(1).map((analysis) => (
-              <div key={analysis.id} className="flex items-center justify-between p-4 border rounded-lg bg-card">
-                <div>
-                  <p className="font-medium">Score: {analysis.overallScore}</p>
+      <Tabs defaultValue="analysis" className="w-full">
+        <TabsList className="grid w-full grid-cols-2 mb-8">
+          <TabsTrigger value="analysis">ATS Analysis</TabsTrigger>
+          <TabsTrigger value="optimize" className="relative">
+            <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary to-purple-500 font-bold">
+              Auto-Optimize AI
+            </span>
+          </TabsTrigger>
+        </TabsList>
+        
+        <TabsContent value="analysis" className="space-y-8">
+          <div>
+            {latestAnalysis ? (
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-xl font-semibold">Latest Analysis Report</h3>
                   <p className="text-sm text-muted-foreground">
-                    {formatDistanceToNow(new Date(analysis.createdAt), { addSuffix: true })}
+                    Generated {formatDistanceToNow(new Date(latestAnalysis.createdAt), { addSuffix: true })}
                   </p>
                 </div>
-                <Button variant="ghost" size="sm">View Report</Button>
+                <AnalysisReport analysis={latestAnalysis as any} />
               </div>
-            ))}
+            ) : (
+              <div className="flex flex-col items-center justify-center h-64 border-2 border-dashed rounded-xl bg-muted/20">
+                <div className="text-center max-w-sm space-y-4">
+                  <h3 className="text-lg font-semibold">No Analysis Yet</h3>
+                  <p className="text-sm text-muted-foreground">
+                    We haven't analyzed this resume yet. Click the button below to have our AI review your resume against ATS standards.
+                  </p>
+                  <AnalyzeButton resumeId={resume.id} isAnalyzingDisabled={false} />
+                </div>
+              </div>
+            )}
           </div>
-        </div>
-      )}
+
+          {resume.analyses.length > 1 && (
+            <div className="pt-8 border-t">
+              <h3 className="text-lg font-semibold mb-4">Past Analyses</h3>
+              <div className="space-y-4">
+                {resume.analyses.slice(1).map((analysis) => (
+                  <div key={analysis.id} className="flex items-center justify-between p-4 border rounded-lg bg-card">
+                    <div>
+                      <p className="font-medium">Score: {analysis.overallScore}</p>
+                      <p className="text-sm text-muted-foreground">
+                        {formatDistanceToNow(new Date(analysis.createdAt), { addSuffix: true })}
+                      </p>
+                    </div>
+                    <Button variant="ghost" size="sm">View Report</Button>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </TabsContent>
+
+        <TabsContent value="optimize">
+          <OptimizationView 
+            resumeId={resume.id} 
+            existingOptimization={latestOptimization} 
+          />
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }

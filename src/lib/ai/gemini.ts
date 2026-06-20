@@ -103,6 +103,72 @@ const jobMatchSchema = {
   required: ["matchScore", "missingSkills", "strongSkills", "improvementSuggestions"],
 };
 
+const optimizedResumeSchema = {
+  type: Type.OBJECT,
+  properties: {
+    personalInfo: {
+      type: Type.OBJECT,
+      properties: {
+        name: { type: Type.STRING },
+        email: { type: Type.STRING },
+        phone: { type: Type.STRING },
+        location: { type: Type.STRING },
+        linkedin: { type: Type.STRING },
+        github: { type: Type.STRING },
+        portfolio: { type: Type.STRING },
+      },
+    },
+    summary: { type: Type.STRING, description: "Professional summary" },
+    experience: {
+      type: Type.ARRAY,
+      items: {
+        type: Type.OBJECT,
+        properties: {
+          title: { type: Type.STRING },
+          company: { type: Type.STRING },
+          location: { type: Type.STRING },
+          startDate: { type: Type.STRING },
+          endDate: { type: Type.STRING },
+          description: {
+            type: Type.ARRAY,
+            items: { type: Type.STRING },
+            description: "Bullet points detailing achievements",
+          },
+        },
+        required: ["title", "company", "description"],
+      },
+    },
+    education: {
+      type: Type.ARRAY,
+      items: {
+        type: Type.OBJECT,
+        properties: {
+          degree: { type: Type.STRING },
+          institution: { type: Type.STRING },
+          location: { type: Type.STRING },
+          startDate: { type: Type.STRING },
+          endDate: { type: Type.STRING },
+        },
+        required: ["degree", "institution"],
+      },
+    },
+    skills: {
+      type: Type.ARRAY,
+      items: { type: Type.STRING },
+    },
+    newScore: {
+      type: Type.INTEGER,
+      description: "The estimated new ATS score of this optimized resume",
+    },
+    changeSummary: {
+      type: Type.ARRAY,
+      items: { type: Type.STRING },
+      description: "A summary of the key improvements made to the resume.",
+    },
+  },
+  required: ["personalInfo", "summary", "experience", "education", "skills", "newScore", "changeSummary"],
+};
+
 export async function calculateJobMatch(resumeText: string, jobDescriptionText: string) {
   const prompt = `You are an expert Technical Recruiter and ATS system.
 Compare the following Resume against the Job Description.
@@ -131,6 +197,46 @@ ${jobDescriptionText}
 
   if (!response.text) {
     throw new Error("Failed to generate job match analysis.");
+  }
+
+  return JSON.parse(response.text);
+}
+
+export async function autoOptimizeResume(resumeText: string, jobDescriptionText?: string) {
+  let prompt = `You are an expert Executive Resume Writer and Technical Recruiter.
+Your task is to completely rewrite and optimize the following raw resume text into a highly structured, ATS-friendly, and highly impactful format.
+Remove all weak language, utilize strong action verbs, quantify achievements where possible, and ensure the formatting structure is perfectly clean.
+
+`;
+
+  if (jobDescriptionText) {
+    prompt += `Additionally, tightly tailor this resume specifically to match the requirements of this Job Description:\n"""\n${jobDescriptionText}\n"""\n\nEnsure missing keywords are integrated naturally into the experience bullets and summary.`;
+  } else {
+    prompt += `Optimize it for general industry best practices, making it as compelling as possible for top-tier tech companies and startups.`;
+  }
+
+  prompt += `
+
+Raw Resume Text:
+"""
+${resumeText}
+"""
+
+Return a JSON object matching the provided schema. The 'description' for experience must be an array of strong bullet points.
+Also provide the estimated 'newScore' out of 100, and a 'changeSummary' listing the top 3-5 major improvements you made.`;
+
+  const response = await ai.models.generateContent({
+    model: "gemini-2.5-flash",
+    contents: prompt,
+    config: {
+      responseMimeType: "application/json",
+      responseSchema: optimizedResumeSchema,
+      temperature: 0.2, // Low temperature for factual consistency
+    },
+  });
+
+  if (!response.text) {
+    throw new Error("Failed to generate optimized resume.");
   }
 
   return JSON.parse(response.text);
