@@ -17,7 +17,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
           </div>
           {/* User Nav will go here */}
         </header>
-        <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6">
+        <main className="flex flex-1 flex-col p-4 lg:p-8 bg-black/40 backdrop-blur-2xl shadow-inner min-h-screen">
           {children}
         </main>
       </div>

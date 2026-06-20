@@ -25,7 +25,7 @@ export function DashboardSidebar() {
   const [isProModalOpen, setIsProModalOpen] = useState(false);
 
   return (
-    <nav className="hidden md:flex flex-col w-[280px] shrink-0 h-screen bg-[#111827] relative z-50 py-10 px-6 border-r border-[#1f2937]">
+    <nav className="hidden md:flex flex-col w-[280px] shrink-0 h-screen sticky top-0 bg-[#111827] z-50 py-10 px-6 border-r border-[#1f2937]">
       
       {/* Logo Section */}
       <div className="mb-12 px-4">
