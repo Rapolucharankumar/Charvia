@@ -22,39 +22,39 @@
 }
 
 :root {
-  /* Bright Premium Startup Palette */
-  --background: #F8FAFC;
-  --foreground: #0F172A;
+  /* Luxury Editorial Palette */
+  --background: #FAFAF9; /* Warm Alabaster */
+  --foreground: #1C1917; /* Deep Charcoal */
   
   --card: #FFFFFF;
-  --card-foreground: #0F172A;
+  --card-foreground: #1C1917;
   
   --popover: #FFFFFF;
-  --popover-foreground: #0F172A;
+  --popover-foreground: #1C1917;
   
-  --primary: #7C3AED;
-  --primary-foreground: #FFFFFF;
+  --primary: #1C1917; /* Deep Charcoal instead of Purple */
+  --primary-foreground: #FAFAF9;
   
-  --secondary: #06B6D4;
+  --secondary: #A8A29E; /* Warm Stone instead of Cyan */
   --secondary-foreground: #FFFFFF;
   
-  --muted: #F1F5F9;
-  --muted-foreground: #64748B;
+  --muted: #F5F5F4;
+  --muted-foreground: #78716C;
   
-  --accent: #F59E0B;
-  --accent-foreground: #FFFFFF;
+  --accent: #E7E5E4; /* Muted Champagne / Stone 200 */
+  --accent-foreground: #1C1917;
   
-  --success: #22C55E;
+  --success: #65a30d; /* Muted Sage / Lime 600 */
   --success-foreground: #FFFFFF;
   
-  --destructive: #EF4444;
+  --destructive: #9f1239; /* Deep Rose / Rose 800 */
   --destructive-foreground: #FFFFFF;
 
-  --border: #E2E8F0;
-  --input: #E2E8F0;
-  --ring: rgba(124, 58, 237, 0.3); /* Primary with opacity */
+  --border: #E7E5E4; /* Stone 200 */
+  --input: #E7E5E4;
+  --ring: rgba(28, 25, 23, 0.15); /* Charcoal with low opacity */
   
-  --radius: 1rem;
+  --radius: 0.5rem; /* Sharper, more editorial corners */
 }
 
 /* Remove dark mode completely to enforce light bright theme */
@@ -71,16 +71,13 @@
   }
 }
 
-/* Glassmorphism & Premium Utilities */
+/* Luxury Elegance Utilities */
 @layer utilities {
   .glass {
-    @apply bg-white/80 backdrop-blur-xl border border-white shadow-[0_4px_30px_-10px_rgba(0,0,0,0.05)];
+    @apply bg-white/90 backdrop-blur-2xl shadow-[0_8px_40px_-12px_rgba(28,25,23,0.08)];
   }
   .glass-card {
-    @apply bg-white rounded-3xl border border-slate-100 shadow-[0_10px_40px_-15px_rgba(0,0,0,0.05)] hover:shadow-[0_15px_50px_-15px_rgba(124,58,237,0.15)] transition-all duration-300;
-  }
-  .text-glow {
-    text-shadow: 0 0 20px rgba(124,58,237,0.2);
+    @apply bg-white border border-stone-100 shadow-[0_12px_60px_-15px_rgba(28,25,23,0.05)] transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)];
   }
 }
 

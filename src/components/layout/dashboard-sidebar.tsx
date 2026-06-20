@@ -2,12 +2,10 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LogOut } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { logout } from "@/app/(auth)/actions";
 import { useState } from "react";
 import { ProModal } from "@/components/pro-modal";
-import { motion } from "framer-motion";
 
 export const sidebarNavItems = [
   { title: "Dashboard", href: "/dashboard" },
@@ -26,12 +24,12 @@ export function DashboardSidebar() {
   const [isProModalOpen, setIsProModalOpen] = useState(false);
 
   return (
-    <nav className="hidden md:flex flex-col w-[260px] shrink-0 h-screen bg-transparent relative z-50 py-12 px-8 border-r border-slate-200/50">
+    <nav className="hidden md:flex flex-col w-[280px] shrink-0 h-screen bg-transparent relative z-50 py-16 px-12 border-r border-stone-200/50">
       
       {/* Logo Section */}
-      <div className="mb-16">
+      <div className="mb-20">
         <Link href="/" className="flex items-center">
-          <span className="text-2xl font-playfair font-black tracking-tight text-slate-900">Charvia.</span>
+          <span className="text-3xl font-playfair font-black tracking-tight text-stone-900">Charvia.</span>
         </Link>
       </div>
 
@@ -52,21 +50,17 @@ export function DashboardSidebar() {
                   }
                 }}
                 className={cn(
-                  "block w-full text-left transition-all duration-500 relative group font-inter",
-                  isActive ? "text-slate-900" : "text-slate-400 hover:text-slate-600"
+                  "block w-full text-left transition-all duration-700 relative group font-inter",
+                  isActive ? "text-stone-900" : "text-stone-400 hover:text-stone-700"
                 )}
               >
-                <span className={cn("text-sm tracking-wide uppercase transition-all duration-300", isActive ? "font-bold" : "font-medium")}>
+                <span className={cn("text-sm tracking-[0.15em] uppercase transition-all duration-700", isActive ? "font-bold" : "font-light")}>
                   {item.title}
                 </span>
-
-                {/* Elegant Active Indicator: A very subtle left-offset dot or underline */}
+                
+                {/* Extremely delicate line indicator for active state */}
                 {isActive && (
-                  <motion.div 
-                    layoutId="sidebar-active-indicator"
-                    className="absolute -left-4 top-1/2 -translate-y-1/2 w-1 h-1 rounded-full bg-slate-900"
-                    transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                  />
+                  <span className="absolute -left-6 top-1/2 -translate-y-1/2 w-3 h-px bg-stone-900" />
                 )}
               </button>
             );
@@ -75,22 +69,21 @@ export function DashboardSidebar() {
       </div>
 
       {/* Bottom Actions Section */}
-      <div className="mt-auto pt-12 space-y-8">
-        {/* Pro Link */}
+      <div className="mt-auto pt-16 space-y-6 border-t border-stone-200/50">
+        {/* Editorial Subscription Link */}
         <button 
           onClick={() => setIsProModalOpen(true)}
-          className="block w-full text-left text-sm tracking-wide uppercase font-inter font-medium text-primary hover:text-primary/80 transition-colors"
+          className="block w-full text-left font-playfair italic text-lg text-stone-600 hover:text-stone-900 transition-colors"
         >
-          Upgrade to Pro →
+          Unlock Editorial access
         </button>
 
         {/* Logout */}
         <form action={logout}>
           <button
             type="submit"
-            className="flex w-full items-center gap-2 text-slate-400 hover:text-slate-900 transition-colors font-inter text-sm tracking-wide uppercase font-medium"
+            className="block w-full text-left text-xs tracking-[0.2em] uppercase font-inter font-light text-stone-400 hover:text-stone-900 transition-colors"
           >
-            <LogOut className="h-4 w-4" />
             Sign Out
           </button>
         </form>
