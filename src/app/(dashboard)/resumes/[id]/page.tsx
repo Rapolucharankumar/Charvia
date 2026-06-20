@@ -8,7 +8,7 @@ import Link from "next/link";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { formatDistanceToNow } from "date-fns";
 
-export default async function ResumeDetailsPage({ params }: { params: { id: string } }) {
+export default async function ResumeDetailsPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
@@ -17,14 +17,20 @@ export default async function ResumeDetailsPage({ params }: { params: { id: stri
     redirect("/login");
   }
 
-  const resume = await prisma.resume.findUnique({
-    where: { id },
-    include: {
-      analyses: {
-        orderBy: { createdAt: 'desc' }
+  let resume;
+  try {
+    resume = await prisma.resume.findUnique({
+      where: { id },
+      include: {
+        analyses: {
+          orderBy: { createdAt: 'desc' }
+        }
       }
-    }
-  });
+    });
+  } catch (error) {
+    // Catch invalid UUIDs
+    notFound();
+  }
 
   if (!resume || resume.userId !== user.id) {
     notFound();

@@ -7,7 +7,7 @@ import { buttonVariants } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { CopyButton } from "@/components/ui/copy-button";
 
-export default async function IntroDetailsPage({ params }: { params: { id: string } }) {
+export default async function IntroDetailsPage({ params }: { params: Promise<{ id: string }> }) {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
 
@@ -15,9 +15,14 @@ export default async function IntroDetailsPage({ params }: { params: { id: strin
     return null;
   }
 
-  const intro = await prisma.selfIntroduction.findUnique({
-    where: { id: params.id, userId: user.id },
-  });
+  let intro;
+  try {
+    intro = await prisma.selfIntroduction.findUnique({
+      where: { id: (await params).id, userId: user.id },
+    });
+  } catch (error) {
+    notFound();
+  }
 
   if (!intro) {
     notFound();

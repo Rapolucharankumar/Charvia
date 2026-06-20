@@ -8,7 +8,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Badge } from "@/components/ui/badge";
 
-export default async function InterviewDetailsPage({ params }: { params: { id: string } }) {
+export default async function InterviewDetailsPage({ params }: { params: Promise<{ id: string }> }) {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
 
@@ -16,9 +16,14 @@ export default async function InterviewDetailsPage({ params }: { params: { id: s
     return null;
   }
 
-  const session = await prisma.interviewSession.findUnique({
-    where: { id: params.id, userId: user.id },
-  });
+  let session;
+  try {
+    session = await prisma.interviewSession.findUnique({
+      where: { id: (await params).id, userId: user.id },
+    });
+  } catch (error) {
+    notFound();
+  }
 
   if (!session || !session.feedback) {
     notFound();

@@ -4,11 +4,12 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { forgotPassword } from "../actions";
 
-export default function ForgotPasswordPage({
+export default async function ForgotPasswordPage({
   searchParams,
 }: {
-  searchParams: { error?: string; success?: string };
+  searchParams: Promise<{ error?: string; success?: string }>;
 }) {
+  const params = await searchParams;
   return (
     <>
       <div className="flex flex-col space-y-2 text-center">
@@ -35,14 +36,14 @@ export default function ForgotPasswordPage({
                 required
               />
             </div>
-            {searchParams?.error && (
+            {params?.error && (
               <p className="text-sm text-destructive text-center">
-                {searchParams.error}
+                {params.error}
               </p>
             )}
-            {searchParams?.success && (
+            {params?.success && (
               <p className="text-sm text-green-600 dark:text-green-400 text-center">
-                {searchParams.success}
+                {params.success}
               </p>
             )}
             <Button type="submit" className="w-full">
