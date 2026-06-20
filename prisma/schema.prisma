@@ -1,0 +1,153 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id                String             @id @db.Uuid
+  email             String             @unique
+  firstName              String?
+  lastName               String?
+  plan                   PlanType           @default(FREE)
+  razorpayCustomerId     String?            @unique
+  razorpaySubscriptionId String?            @unique
+  subscriptionStatus     String?
+  currentPeriodEnd       DateTime?
+  createdAt              DateTime           @default(now())
+  updatedAt              DateTime           @updatedAt
+  resumes           Resume[]
+  jobDescriptions   JobDescription[]
+  applications      Application[]
+  interviewSessions InterviewSession[]
+  introductions     SelfIntroduction[]
+}
+
+model Resume {
+  id              String           @id @default(uuid()) @db.Uuid
+  userId          String           @db.Uuid
+  user            User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title           String
+  content         Json
+  fileUrl         String?
+  isPrimary       Boolean          @default(false)
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  analyses        ResumeAnalysis[]
+  matchScores     MatchScore[]
+  applications    Application[]
+}
+
+model JobDescription {
+  id                String             @id @default(uuid()) @db.Uuid
+  userId            String             @db.Uuid
+  user              User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  companyName       String
+  jobTitle          String
+  content           String             @db.Text
+  url               String?
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+  analyses          ResumeAnalysis[]
+  matchScores       MatchScore[]
+  applications      Application[]
+  interviewSessions InterviewSession[]
+}
+
+model ResumeAnalysis {
+  id               String          @id @default(uuid()) @db.Uuid
+  resumeId         String          @db.Uuid
+  resume           Resume          @relation(fields: [resumeId], references: [id], onDelete: Cascade)
+  jobDescriptionId String?         @db.Uuid
+  jobDescription   JobDescription? @relation(fields: [jobDescriptionId], references: [id], onDelete: SetNull)
+  overallScore     Int?
+  feedback         Json
+  createdAt        DateTime        @default(now())
+}
+
+model MatchScore {
+  id               String         @id @default(uuid()) @db.Uuid
+  resumeId         String         @db.Uuid
+  resume           Resume         @relation(fields: [resumeId], references: [id], onDelete: Cascade)
+  jobDescriptionId String         @db.Uuid
+  jobDescription   JobDescription @relation(fields: [jobDescriptionId], references: [id], onDelete: Cascade)
+  score            Int
+  details          Json
+  createdAt        DateTime       @default(now())
+}
+
+model Application {
+  id                String             @id @default(uuid()) @db.Uuid
+  userId            String             @db.Uuid
+  user              User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  resumeId          String?            @db.Uuid
+  resume            Resume?            @relation(fields: [resumeId], references: [id], onDelete: SetNull)
+  jobDescriptionId  String?            @db.Uuid
+  jobDescription    JobDescription?    @relation(fields: [jobDescriptionId], references: [id], onDelete: SetNull)
+  companyName       String
+  jobTitle          String
+  status            ApplicationStatus  @default(APPLIED)
+  appliedAt         DateTime?
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+  interviewSessions InterviewSession[]
+}
+
+model InterviewSession {
+  id               String            @id @default(uuid()) @db.Uuid
+  userId           String            @db.Uuid
+  user             User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  applicationId    String?           @db.Uuid
+  application      Application?      @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  jobDescriptionId String?           @db.Uuid
+  jobDescription   JobDescription?   @relation(fields: [jobDescriptionId], references: [id], onDelete: SetNull)
+  type             InterviewType
+  status           InterviewStatus   @default(SCHEDULED)
+  scheduledAt      DateTime
+  feedback         Json?
+  score            Int?
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+}
+
+enum ApplicationStatus {
+  APPLIED
+  ASSESSMENT
+  INTERVIEW
+  HR_ROUND
+  OFFER
+  REJECTED
+}
+
+enum InterviewType {
+  MOCK
+  REAL
+}
+
+enum InterviewStatus {
+  SCHEDULED
+  COMPLETED
+  CANCELLED
+}
+
+model SelfIntroduction {
+  id        String   @id @default(uuid()) @db.Uuid
+  userId    String   @db.Uuid
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  inputs    Json
+  generated Json
+  createdAt DateTime @default(now())
+}
+
+enum PlanType {
+  FREE
+  PRO
+}

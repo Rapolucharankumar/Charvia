@@ -1,0 +1,82 @@
+"use server";
+
+import prisma from "@/lib/prisma";
+import { createClient } from "@/lib/supabase/server";
+import { revalidatePath } from "next/cache";
+import { calculateJobMatch } from "@/lib/ai/gemini";
+import * as pdfParseModule from "pdf-parse";
+const pdfParse = (pdfParseModule as any).default || pdfParseModule;
+
+export async function generateMatchScore(
+  resumeId: string, 
+  companyName: string, 
+  jobTitle: string, 
+  jobDescriptionText: string
+) {
+  const supabase = await createClient();
+  const { data: { user }, error: authError } = await supabase.auth.getUser();
+
+  if (authError || !user) {
+    throw new Error("Unauthorized");
+  }
+
+  // 1. Fetch Resume to ensure ownership and get fileUrl
+  const resume = await prisma.resume.findUnique({
+    where: { id: resumeId },
+  });
+
+  if (!resume || resume.userId !== user.id) {
+    throw new Error("Resume not found or unauthorized");
+  }
+
+  if (!resume.fileUrl) {
+    throw new Error("No file associated with this resume");
+  }
+
+  try {
+    // 2. Fetch the PDF file and parse it
+    const response = await fetch(resume.fileUrl);
+    if (!response.ok) {
+      throw new Error(`Failed to fetch PDF: ${response.statusText}`);
+    }
+
+    const arrayBuffer = await response.arrayBuffer();
+    const buffer = Buffer.from(arrayBuffer);
+
+    const pdfData = await pdfParse(buffer);
+    const resumeText = pdfData.text;
+
+    if (!resumeText || resumeText.trim() === "") {
+      throw new Error("Could not extract text from the PDF.");
+    }
+
+    // 3. Create or save Job Description
+    const jobDescription = await prisma.jobDescription.create({
+      data: {
+        userId: user.id,
+        companyName,
+        jobTitle,
+        content: jobDescriptionText,
+      },
+    });
+
+    // 4. Call Gemini AI to calculate job match
+    const matchResult = await calculateJobMatch(resumeText, jobDescriptionText);
+
+    // 5. Save MatchScore to DB
+    const newMatchScore = await prisma.matchScore.create({
+      data: {
+        resumeId: resume.id,
+        jobDescriptionId: jobDescription.id,
+        score: matchResult.matchScore,
+        details: matchResult,
+      },
+    });
+
+    revalidatePath("/dashboard/match");
+    return newMatchScore;
+  } catch (error: any) {
+    console.error("Error generating match score:", error);
+    throw new Error(error.message || "An error occurred during analysis.");
+  }
+}
