@@ -36,7 +36,7 @@ export function IntroForm() {
       setError(null);
 
       const intro = await createSelfIntroduction(inputs);
-      router.push(`/dashboard/intro/${intro.id}`);
+      router.push(`/intro/${intro.id}`);
     } catch (err: any) {
       console.error(err);
       setError(err.message || "Failed to generate introduction");

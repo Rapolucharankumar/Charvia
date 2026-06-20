@@ -4,10 +4,7 @@ import prisma from "@/lib/prisma";
 import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
 import { analyzeResume } from "@/lib/ai/gemini";
-import * as pdfParseModule from "pdf-parse";
 import { checkAtsLimit } from "@/lib/subscription";
-
-const pdfParse = (pdfParseModule as any).default || pdfParseModule;
 
 export async function generateAnalysis(resumeId: string) {
   const supabase = await createClient();
@@ -45,9 +42,11 @@ export async function generateAnalysis(resumeId: string) {
     const arrayBuffer = await response.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
 
-    // 3. Extract text
-    const pdfData = await pdfParse(buffer);
-    const text = pdfData.text;
+    // 3. Extract text using unpdf (Next.js App Router compatible)
+    const { extractText } = await import("unpdf");
+    const result = await extractText(new Uint8Array(buffer));
+    const rawText = result.text;
+    const text = Array.isArray(rawText) ? rawText.join("\n") : rawText;
 
     if (!text || text.trim() === "") {
       throw new Error("Could not extract text from the PDF.");
@@ -65,7 +64,7 @@ export async function generateAnalysis(resumeId: string) {
       },
     });
 
-    revalidatePath(`/dashboard/resumes/${resumeId}`);
+    revalidatePath(`/resumes/${resumeId}`);
     return newAnalysis;
   } catch (error: any) {
     console.error("Error generating analysis:", error);

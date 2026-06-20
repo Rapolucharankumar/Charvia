@@ -3,6 +3,8 @@ import { createClient } from "@/lib/supabase/server";
 import prisma from "@/lib/prisma";
 import { ResumeUploadZone } from "@/components/resumes/resume-upload-zone";
 import { ResumeCard } from "@/components/resumes/resume-card";
+import { EmptyState } from "@/components/ui/empty-state";
+import { FileText } from "lucide-react";
 
 export default async function ResumesPage() {
   const supabase = await createClient();
@@ -29,7 +31,7 @@ export default async function ResumesPage() {
       </div>
 
       <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-        <div className="md:col-span-2 lg:col-span-3">
+        <div className="md:col-span-2 lg:grid-cols-3">
           <ResumeUploadZone />
         </div>
       </div>
@@ -38,10 +40,11 @@ export default async function ResumesPage() {
         <h3 className="text-xl font-semibold tracking-tight">Your Uploaded Resumes</h3>
         
         {resumes.length === 0 ? (
-          <div className="flex flex-col items-center justify-center h-48 rounded-xl border border-dashed bg-muted/20 text-muted-foreground">
-            <p>No resumes uploaded yet.</p>
-            <p className="text-sm mt-1">Upload a PDF above to get started.</p>
-          </div>
+          <EmptyState 
+            icon={FileText} 
+            title="No resumes uploaded" 
+            description="Upload your first resume using the dropzone above to unlock AI ATS analysis and mock interviews." 
+          />
         ) : (
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {resumes.map((resume) => (

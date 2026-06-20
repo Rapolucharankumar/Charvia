@@ -4,6 +4,7 @@ import Link from "next/link";
 import { formatDistanceToNow } from "date-fns";
 import { PlusCircle, Building, Target, Clock, ArrowRight } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
+import { EmptyState } from "@/components/ui/empty-state";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 
 export default async function InterviewsPage() {
@@ -33,7 +34,7 @@ export default async function InterviewsPage() {
           </p>
         </div>
         <div className="flex items-center space-x-2">
-          <Link href="/dashboard/interviews/new" className={buttonVariants()}>
+          <Link href="/interviews/new" className={buttonVariants()}>
             <PlusCircle className="mr-2 h-4 w-4" />
             New Prep Guide
           </Link>
@@ -41,18 +42,13 @@ export default async function InterviewsPage() {
       </div>
 
       {sessions.length === 0 ? (
-        <div className="flex flex-col items-center justify-center p-12 text-center border rounded-lg bg-muted/20 border-dashed">
-          <div className="rounded-full bg-primary/10 p-4 mb-4">
-            <Target className="h-8 w-8 text-primary" />
-          </div>
-          <h3 className="text-lg font-medium">No prep guides yet</h3>
-          <p className="text-sm text-muted-foreground max-w-sm mt-2 mb-6">
-            Create your first interview prep guide to get AI-generated HR, technical, and behavioral questions tailored to your role.
-          </p>
-          <Link href="/dashboard/interviews/new" className={buttonVariants()}>
-            Create First Guide
-          </Link>
-        </div>
+        <EmptyState
+          icon={Target}
+          title="No prep guides yet"
+          description="Create your first interview prep guide to get AI-generated HR, technical, and behavioral questions tailored to your role."
+          actionLabel="Create First Guide"
+          actionHref="/interviews/new"
+        />
       ) : (
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {sessions.map((session) => {
@@ -82,7 +78,7 @@ export default async function InterviewsPage() {
                 </CardContent>
                 <CardFooter>
                   <Link 
-                    href={`/dashboard/interviews/${session.id}`}
+                    href={`/interviews/${session.id}`}
                     className={buttonVariants({ variant: "secondary", className: "w-full" })}
                   >
                     View Prep Guide

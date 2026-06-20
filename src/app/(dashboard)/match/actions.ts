@@ -4,8 +4,7 @@ import prisma from "@/lib/prisma";
 import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
 import { calculateJobMatch } from "@/lib/ai/gemini";
-import * as pdfParseModule from "pdf-parse";
-const pdfParse = (pdfParseModule as any).default || pdfParseModule;
+
 
 export async function generateMatchScore(
   resumeId: string, 
@@ -43,8 +42,11 @@ export async function generateMatchScore(
     const arrayBuffer = await response.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
 
-    const pdfData = await pdfParse(buffer);
-    const resumeText = pdfData.text;
+    // Use unpdf — compatible with Next.js App Router/Turbopack
+    const { extractText } = await import("unpdf");
+    const result = await extractText(new Uint8Array(buffer));
+    const rawText = result.text;
+    const resumeText = Array.isArray(rawText) ? rawText.join("\n") : rawText;
 
     if (!resumeText || resumeText.trim() === "") {
       throw new Error("Could not extract text from the PDF.");
@@ -73,7 +75,7 @@ export async function generateMatchScore(
       },
     });
 
-    revalidatePath("/dashboard/match");
+    revalidatePath("/match");
     return newMatchScore;
   } catch (error: any) {
     console.error("Error generating match score:", error);

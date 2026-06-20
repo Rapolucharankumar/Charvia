@@ -14,7 +14,7 @@ import {
 import { cn } from "@/lib/utils";
 import { logout } from "@/app/(auth)/actions";
 
-const sidebarNavItems = [
+export const sidebarNavItems = [
   {
     title: "Dashboard",
     href: "/dashboard",
@@ -22,32 +22,32 @@ const sidebarNavItems = [
   },
   {
     title: "Resumes",
-    href: "/dashboard/resumes",
+    href: "/resumes",
     icon: FileText,
   },
   {
     title: "Job Match",
-    href: "/dashboard/match",
+    href: "/match",
     icon: CheckSquare,
   },
   {
     title: "Self Intro",
-    href: "/dashboard/intro",
+    href: "/intro",
     icon: Briefcase,
   },
   {
     title: "Applications",
-    href: "/dashboard/applications",
+    href: "/applications",
     icon: LayoutDashboard,
   },
   {
     title: "Interviews",
-    href: "/dashboard/interviews",
+    href: "/interviews",
     icon: Briefcase,
   },
   {
     title: "Settings",
-    href: "/dashboard/settings",
+    href: "/settings",
     icon: Settings,
   },
 ];

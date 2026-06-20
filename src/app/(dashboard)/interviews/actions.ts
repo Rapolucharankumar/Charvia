@@ -41,7 +41,7 @@ export async function createInterviewPrep(company: string, role: string, experie
       },
     });
 
-    revalidatePath("/dashboard/interviews");
+    revalidatePath("/interviews");
     return newSession;
   } catch (error: any) {
     console.error("Error creating interview prep:", error);

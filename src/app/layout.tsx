@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
+import { Toaster } from "@/components/ui/sonner";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -14,8 +15,24 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Charvia | Career Growth Platform",
-  description: "Charvia helps students and freshers improve resumes, prepare for interviews, track applications, and increase placement success.",
+  title: {
+    default: "Charvia | AI Career Growth Platform",
+    template: "%s | Charvia",
+  },
+  description: "Supercharge your job search with AI resume analysis, mock interviews, and intelligent job matching.",
+  keywords: ["AI resume", "mock interviews", "job tracking", "career growth", "ATS analyzer"],
+  openGraph: {
+    title: "Charvia | AI Career Growth Platform",
+    description: "Supercharge your job search with AI resume analysis, mock interviews, and intelligent job matching.",
+    url: "https://charvia.com",
+    siteName: "Charvia",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Charvia | AI Career Growth Platform",
+    description: "Supercharge your job search with AI.",
+  },
 };
 
 export default function RootLayout({
@@ -29,7 +46,7 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
       suppressHydrationWarning
     >
-      <body className="min-h-full flex flex-col">
+      <body className="flex min-h-screen flex-col bg-background">
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
@@ -37,6 +54,7 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           {children}
+          <Toaster position="top-center" richColors />
         </ThemeProvider>
       </body>
     </html>

@@ -20,7 +20,7 @@ export async function createApplication(data: { companyName: string; jobTitle: s
     },
   });
 
-  revalidatePath("/dashboard/applications");
+  revalidatePath("/applications");
   return app;
 }
 
@@ -35,7 +35,7 @@ export async function updateApplicationStatus(id: string, status: ApplicationSta
     data: { status },
   });
 
-  revalidatePath("/dashboard/applications");
+  revalidatePath("/applications");
   return updatedApp;
 }
 
@@ -49,5 +49,5 @@ export async function deleteApplication(id: string) {
     where: { id, userId: user.id },
   });
 
-  revalidatePath("/dashboard/applications");
+  revalidatePath("/applications");
 }

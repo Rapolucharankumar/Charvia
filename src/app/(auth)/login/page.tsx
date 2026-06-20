@@ -4,11 +4,12 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { login } from "../actions";
 
-export default function LoginPage({
+export default async function LoginPage({
   searchParams,
 }: {
-  searchParams: { error?: string };
+  searchParams: Promise<{ error?: string }>;
 }) {
+  const params = await searchParams;
   return (
     <>
       <div className="flex flex-col space-y-2 text-center">
@@ -52,9 +53,9 @@ export default function LoginPage({
                 required
               />
             </div>
-            {searchParams?.error && (
+            {params?.error && (
               <p className="text-sm text-destructive text-center">
-                {searchParams.error}
+                {params.error}
               </p>
             )}
             <Button type="submit" className="w-full">

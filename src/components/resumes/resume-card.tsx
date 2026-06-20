@@ -59,7 +59,7 @@ export function ResumeCard({ id, title, createdAt, fileUrl }: ResumeCardProps) {
           variant="default" 
           size="sm" 
           className="flex-1 flex items-center gap-2"
-          onClick={() => window.location.href = `/dashboard/resumes/${id}`}
+          onClick={() => window.location.href = `/resumes/${id}`}
         >
           Analyze
         </Button>

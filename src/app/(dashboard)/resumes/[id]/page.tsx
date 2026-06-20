@@ -35,7 +35,7 @@ export default async function ResumeDetailsPage({ params }: { params: { id: stri
   return (
     <div className="flex-1 space-y-8 p-8 pt-6">
       <div className="flex items-center gap-4">
-        <Link href="/dashboard/resumes">
+        <Link href="/resumes">
           <Button variant="outline" size="icon">
             <ArrowLeft className="h-4 w-4" />
           </Button>

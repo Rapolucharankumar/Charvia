@@ -31,7 +31,7 @@ export function InterviewForm() {
       setError(null);
 
       const session = await createInterviewPrep(company, role, experience);
-      router.push(`/dashboard/interviews/${session.id}`);
+      router.push(`/interviews/${session.id}`);
     } catch (err: any) {
       console.error(err);
       setError(err.message || "Failed to generate interview prep guide");

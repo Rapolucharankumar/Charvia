@@ -7,7 +7,7 @@ export default function NewIntroPage() {
   return (
     <div className="flex-1 space-y-8 p-8 pt-6">
       <div className="flex items-center space-x-4">
-        <Link href="/dashboard/intro" className={buttonVariants({ variant: "outline", size: "icon" })}>
+        <Link href="/intro" className={buttonVariants({ variant: "outline", size: "icon" })}>
           <ArrowLeft className="h-4 w-4" />
         </Link>
         <div>

@@ -31,22 +31,34 @@ export async function updateSession(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  // Route protection logic
-  const isDashboardRoute = request.nextUrl.pathname.startsWith("/dashboard");
+  // Route protection logic — protect all actual top-level routes
+  const protectedPrefixes = [
+    "/dashboard",
+    "/resumes",
+    "/interviews",
+    "/applications",
+    "/match",
+    "/intro",
+    "/settings",
+    "/admin",
+    "/pricing",
+  ];
   const isAuthRoute =
     request.nextUrl.pathname.startsWith("/login") ||
     request.nextUrl.pathname.startsWith("/signup") ||
     request.nextUrl.pathname.startsWith("/forgot-password");
 
-  if (isDashboardRoute && !user) {
-    // If user is not authenticated and trying to access dashboard, redirect to login
+  const isProtectedRoute = protectedPrefixes.some((prefix) =>
+    request.nextUrl.pathname.startsWith(prefix)
+  );
+
+  if (isProtectedRoute && !user) {
     const url = request.nextUrl.clone();
     url.pathname = "/login";
     return NextResponse.redirect(url);
   }
 
   if (isAuthRoute && user) {
-    // If user is authenticated and trying to access auth pages, redirect to dashboard
     const url = request.nextUrl.clone();
     url.pathname = "/dashboard";
     return NextResponse.redirect(url);

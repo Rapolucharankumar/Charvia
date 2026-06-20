@@ -26,7 +26,7 @@ export async function createSelfIntroduction(inputs: IntroInputs) {
       },
     });
 
-    revalidatePath("/dashboard/intro");
+    revalidatePath("/intro");
     return intro;
   } catch (error: any) {
     console.error("Error generating self intro:", error);

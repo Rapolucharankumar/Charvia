@@ -4,6 +4,13 @@ import prisma from "@/lib/prisma";
 import Link from "next/link";
 import { LayoutDashboard, Users, ShieldAlert, Settings } from "lucide-react";
 import Image from "next/image";
+import { MobileNav } from "@/components/layout/mobile-nav";
+
+const adminNavItems = [
+  { title: "Overview", href: "/admin", icon: LayoutDashboard },
+  { title: "Users", href: "/admin/users", icon: Users },
+  { title: "Exit to App", href: "/dashboard", icon: Settings },
+];
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   const supabase = await createClient();
@@ -33,22 +40,19 @@ export default async function AdminLayout({ children }: { children: React.ReactN
         </div>
         <div className="flex-1 py-4">
           <nav className="grid items-start px-2 text-sm font-medium lg:px-4 space-y-1">
-            <Link href="/admin" className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground hover:text-primary transition-all">
-              <LayoutDashboard className="h-4 w-4" />
-              Overview
-            </Link>
-            <Link href="/admin/users" className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground hover:text-primary transition-all">
-              <Users className="h-4 w-4" />
-              Users
-            </Link>
-            <Link href="/dashboard" className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground hover:text-primary transition-all mt-8">
-              <Settings className="h-4 w-4" />
-              Exit to App
-            </Link>
+            {adminNavItems.map((item) => (
+              <Link key={item.title} href={item.href} className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground hover:text-primary transition-all">
+                <item.icon className="h-4 w-4" />
+                {item.title}
+              </Link>
+            ))}
           </nav>
         </div>
       </nav>
-      <main className="flex-1 overflow-y-auto">
+      <main className="flex-1 flex flex-col overflow-y-auto">
+        <header className="flex h-14 items-center gap-4 border-b bg-muted/40 px-4 lg:h-[60px] lg:px-6 md:hidden">
+          <MobileNav items={adminNavItems} title="Admin Menu" />
+        </header>
         {children}
       </main>
     </div>

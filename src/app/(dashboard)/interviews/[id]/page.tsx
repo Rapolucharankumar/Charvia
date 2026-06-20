@@ -38,7 +38,7 @@ export default async function InterviewDetailsPage({ params }: { params: { id: s
   return (
     <div className="flex-1 space-y-8 p-8 pt-6">
       <div className="flex items-center space-x-4">
-        <Link href="/dashboard/interviews" className={buttonVariants({ variant: "outline", size: "icon" })}>
+        <Link href="/interviews" className={buttonVariants({ variant: "outline", size: "icon" })}>
           <ArrowLeft className="h-4 w-4" />
         </Link>
         <div>

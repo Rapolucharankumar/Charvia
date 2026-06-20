@@ -29,7 +29,7 @@ export default async function IntrosPage() {
           </p>
         </div>
         <div className="flex items-center space-x-2">
-          <Link href="/dashboard/intro/new" className={buttonVariants()}>
+          <Link href="/intro/new" className={buttonVariants()}>
             <PlusCircle className="mr-2 h-4 w-4" />
             New Introduction
           </Link>
@@ -45,7 +45,7 @@ export default async function IntrosPage() {
           <p className="text-sm text-muted-foreground max-w-sm mt-2 mb-6">
             Generate your first 30-second, 1-minute, HR, and technical elevator pitches instantly.
           </p>
-          <Link href="/dashboard/intro/new" className={buttonVariants()}>
+          <Link href="/intro/new" className={buttonVariants()}>
             Generate Pitches
           </Link>
         </div>
@@ -72,7 +72,7 @@ export default async function IntrosPage() {
                 </CardContent>
                 <CardFooter>
                   <Link 
-                    href={`/dashboard/intro/${intro.id}`}
+                    href={`/intro/${intro.id}`}
                     className={buttonVariants({ variant: "secondary", className: "w-full" })}
                   >
                     View Pitches

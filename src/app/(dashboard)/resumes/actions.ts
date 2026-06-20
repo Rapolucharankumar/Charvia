@@ -21,7 +21,7 @@ export async function saveResumeMetadata(title: string, fileUrl: string) {
     },
   });
 
-  revalidatePath("/dashboard/resumes");
+  revalidatePath("/resumes");
   return newResume;
 }
 
@@ -64,5 +64,5 @@ export async function deleteResume(id: string, fileUrl: string | null) {
     where: { id },
   });
 
-  revalidatePath("/dashboard/resumes");
+  revalidatePath("/resumes");
 }
