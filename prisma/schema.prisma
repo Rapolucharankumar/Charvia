@@ -17,6 +17,7 @@ model User {
   email             String             @unique
   firstName              String?
   lastName               String?
+  isAdmin                Boolean            @default(false)
   plan                   PlanType           @default(FREE)
   razorpayCustomerId     String?            @unique
   razorpaySubscriptionId String?            @unique
