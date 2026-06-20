@@ -32,10 +32,10 @@ export default async function IntroDetailsPage({ params }: { params: Promise<{ i
   const inputs = intro.inputs as any;
 
   const versions = [
-    { title: "30-Second Elevator Pitch", content: generated.thirtySecond },
-    { title: "1-Minute Professional Intro", content: generated.oneMinute },
-    { title: "HR / Cultural Fit Focus", content: generated.hrVersion },
-    { title: "Technical Focus", content: generated.technicalVersion },
+    { title: "30-Second Elevator Pitch", content: generated.thirtySecond || "" },
+    { title: "1-Minute Professional Intro", content: generated.oneMinute || "" },
+    { title: "HR / Cultural Fit Focus", content: generated.hrVersion || "" },
+    { title: "Technical Focus", content: generated.technicalVersion || "" },
   ];
 
   return (

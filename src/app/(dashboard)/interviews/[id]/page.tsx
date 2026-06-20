@@ -35,9 +35,9 @@ export default async function InterviewDetailsPage({ params }: { params: Promise
   const prepGuide = sessionData.prepGuide || { hrQuestions: [], technicalQuestions: [], behavioralQuestions: [] };
 
   const categories = [
-    { title: "HR & Cultural Fit", key: "hrQuestions", data: prepGuide.hrQuestions, color: "bg-blue-500/10 text-blue-600 border-blue-500/20" },
-    { title: "Technical Skills", key: "technicalQuestions", data: prepGuide.technicalQuestions, color: "bg-purple-500/10 text-purple-600 border-purple-500/20" },
-    { title: "Behavioral (STAR Method)", key: "behavioralQuestions", data: prepGuide.behavioralQuestions, color: "bg-orange-500/10 text-orange-600 border-orange-500/20" },
+    { title: "HR & Cultural Fit", key: "hrQuestions", data: prepGuide.hrQuestions || [], color: "bg-blue-500/10 text-blue-600 border-blue-500/20" },
+    { title: "Technical Skills", key: "technicalQuestions", data: prepGuide.technicalQuestions || [], color: "bg-purple-500/10 text-purple-600 border-purple-500/20" },
+    { title: "Behavioral (STAR Method)", key: "behavioralQuestions", data: prepGuide.behavioralQuestions || [], color: "bg-orange-500/10 text-orange-600 border-orange-500/20" },
   ];
 
   return (
