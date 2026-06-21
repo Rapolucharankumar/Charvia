@@ -41,7 +41,7 @@ export function AnalysisReport({ analysis }: AnalysisReportProps) {
       {/* HEADER SECTION */}
       <motion.div variants={item} className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-4">
         <div>
-          <h1 className="text-4xl md:text-5xl font-playfair font-semibold text-foreground tracking-tight">
+          <h1 className="text-4xl md:text-5xl font-sora font-semibold text-foreground tracking-tight">
             ATS Transformation
           </h1>
           <p className="text-muted-foreground font-inter mt-3 text-lg">

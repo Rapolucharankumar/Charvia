@@ -41,7 +41,7 @@ export function OptimizationView({ resumeId, jobDescriptionId, existingOptimizat
         <div className="h-20 w-20 bg-primary/10 rounded-full flex items-center justify-center mb-6">
           <Wand2 className="h-10 w-10 text-primary" />
         </div>
-        <h3 className="text-2xl font-bold mb-2">Auto-Optimize with AI</h3>
+        <h3 className="text-2xl font-sora font-bold mb-2">Auto-Optimize with AI</h3>
         <p className="text-muted-foreground mb-8 max-w-md">
           Let our advanced AI rewrite your resume bullet points, strengthen action verbs, and structure it for maximum ATS compliance.
         </p>
@@ -96,7 +96,7 @@ export function OptimizationView({ resumeId, jobDescriptionId, existingOptimizat
           transition={{ delay: 0.1 }}
           className="col-span-1 md:col-span-2 border rounded-xl p-6 bg-card"
         >
-          <h4 className="font-semibold mb-4 flex items-center gap-2">
+          <h4 className="font-sora font-semibold mb-4 flex items-center gap-2">
             <Wand2 className="h-5 w-5 text-primary" />
             AI Improvements Made
           </h4>

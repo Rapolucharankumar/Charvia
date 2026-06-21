@@ -40,8 +40,8 @@ export function DashboardClient({ firstName, stats }: DashboardClientProps) {
       {/* HEADER SECTION */}
       <motion.div variants={item} className="flex flex-col md:flex-row md:items-end justify-between gap-6">
         <div>
-          <h1 className="text-4xl md:text-5xl font-playfair font-semibold text-foreground tracking-tight">
-            Welcome back, {firstName}.
+          <h1 className="text-4xl md:text-5xl font-sora font-semibold text-foreground tracking-tight">
+            Good Afternoon, {firstName} 👋
           </h1>
           <p className="text-muted-foreground font-inter mt-3 text-lg">
             Here is your actionable career snapshot for today.
@@ -144,7 +144,7 @@ export function DashboardClient({ firstName, stats }: DashboardClientProps) {
               <span className="inline-block px-3 py-1 bg-white/20 rounded-full text-xs font-semibold tracking-wider uppercase mb-6 backdrop-blur-md">
                 Next Recommended Action
               </span>
-              <h3 className="text-3xl font-playfair font-semibold mb-4 leading-tight">Prepare for your upcoming interview.</h3>
+              <h3 className="text-3xl font-sora font-semibold mb-4 leading-tight">Prepare for your upcoming interview.</h3>
               <p className="text-white/80 font-inter text-sm max-w-sm leading-relaxed mb-8">
                 You have an upcoming interview scheduled. Engage with our AI simulator to refine your delivery and secure the offer.
               </p>

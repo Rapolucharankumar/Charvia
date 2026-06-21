@@ -106,10 +106,10 @@ export function KanbanBoard({ initialData, onAdd }: KanbanBoardProps) {
       <div className="flex gap-4 overflow-x-auto pb-4 h-[calc(100vh-200px)] items-start">
         <DragDropContext onDragEnd={onDragEnd}>
           {STAGES.map((stage) => (
-            <div key={stage.id} className="min-w-[320px] w-[320px] flex-shrink-0 bg-slate-50/80 rounded-2xl p-4 border border-slate-100 shadow-sm flex flex-col">
+            <div key={stage.id} className="min-w-[320px] w-[320px] flex-shrink-0 bg-muted/30 rounded-2xl p-4 border border-border shadow-sm flex flex-col">
               <div className="flex items-center justify-between mb-4 px-1">
-                <h3 className={`font-bold text-sm uppercase tracking-wider ${stage.color}`}>{stage.title}</h3>
-                <span className="text-xs bg-white text-slate-500 px-2.5 py-1 rounded-full font-bold shadow-sm border border-slate-100">
+                <h3 className={`font-sora font-bold text-sm uppercase tracking-wider ${stage.color}`}>{stage.title}</h3>
+                <span className="text-xs bg-card text-muted-foreground px-2.5 py-1 rounded-full font-bold shadow-sm border border-border">
                   {getApplicationsByStatus(stage.id).length}
                 </span>
               </div>
@@ -133,7 +133,7 @@ export function KanbanBoard({ initialData, onAdd }: KanbanBoardProps) {
                             className={`${snapshot.isDragging ? "z-50" : ""}`}
                             style={{ ...provided.draggableProps.style }}
                           >
-                            <Card className={`border-none shadow-sm hover:shadow-md transition-all cursor-grab active:cursor-grabbing bg-white rounded-xl border-l-4 ${stage.border}`}>
+                            <Card className={`border-none shadow-sm hover:shadow-md transition-all cursor-grab active:cursor-grabbing bg-card rounded-xl border-l-4 ${stage.border}`}>
                               <CardContent className="p-4 flex flex-col gap-2">
                                 <div className="flex justify-between items-start">
                                   <div className="font-medium leading-none line-clamp-1">{app.jobTitle}</div>

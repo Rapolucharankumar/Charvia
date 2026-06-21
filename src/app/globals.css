@@ -6,7 +6,7 @@
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-inter: var(--font-inter);
-  --font-playfair: var(--font-playfair);
+  --font-sora: var(--font-sora);
   --color-primary: var(--primary);
   --color-secondary: var(--secondary);
   --color-accent: var(--accent);
@@ -22,9 +22,9 @@
 }
 
 :root {
-  /* Balanced Contrast Hybrid Palette */
-  --background: #F6F4F1; /* Warm Cream */
-  --foreground: #111827; /* Dark Slate */
+  /* Light Productivity Theme */
+  --background: #F7F8FA;
+  --foreground: #111827;
   
   --card: #FFFFFF;
   --card-foreground: #111827;
@@ -32,17 +32,17 @@
   --popover: #FFFFFF;
   --popover-foreground: #111827;
   
-  --primary: #6D5DFB;
+  --primary: #7C3AED;
   --primary-foreground: #FFFFFF;
   
-  --secondary: #E5E7EB;
+  --secondary: #06B6D4;
   --secondary-foreground: #111827;
   
   --muted: #F3F4F6;
   --muted-foreground: #6B7280;
   
-  --accent: #FFB800;
-  --accent-foreground: #111827;
+  --accent: #F59E0B;
+  --accent-foreground: #FFFFFF;
   
   --success: #22C55E;
   --success-foreground: #FFFFFF;
@@ -52,9 +52,43 @@
 
   --border: #E5E7EB;
   --input: #E5E7EB;
-  --ring: rgba(109, 93, 251, 0.3); /* Primary with opacity */
+  --ring: rgba(124, 58, 237, 0.3);
   
   --radius: 1rem;
+}
+
+.dark {
+  /* Dark Premium Theme */
+  --background: #0B1020;
+  --foreground: #F8FAFC;
+  
+  --card: #111827;
+  --card-foreground: #F8FAFC;
+  
+  --popover: #111827;
+  --popover-foreground: #F8FAFC;
+  
+  --primary: #7C3AED;
+  --primary-foreground: #FFFFFF;
+  
+  --secondary: #06B6D4;
+  --secondary-foreground: #111827;
+  
+  --muted: #1E293B;
+  --muted-foreground: #94A3B8;
+  
+  --accent: #F59E0B;
+  --accent-foreground: #111827;
+  
+  --success: #22C55E;
+  --success-foreground: #FFFFFF;
+  
+  --destructive: #EF4444;
+  --destructive-foreground: #FFFFFF;
+
+  --border: #1E293B;
+  --input: #1E293B;
+  --ring: rgba(124, 58, 237, 0.4);
 }
 
 /* Remove dark mode completely to enforce light bright theme */
@@ -74,10 +108,10 @@
 /* Premium Hybrid Utilities */
 @layer utilities {
   .glass {
-    @apply bg-white/95 backdrop-blur-3xl shadow-[0_4px_24px_-8px_rgba(17,24,39,0.08)];
+    @apply bg-white/95 dark:bg-[#111827]/95 backdrop-blur-3xl shadow-[0_4px_24px_-8px_rgba(17,24,39,0.08)] dark:shadow-[0_4px_24px_-8px_rgba(0,0,0,0.4)];
   }
   .glass-card {
-    @apply bg-white rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_8px_30px_rgb(109,93,251,0.12)] transition-all duration-300;
+    @apply bg-white dark:bg-[#111827] rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.2)] hover:shadow-[0_8px_30px_rgb(124,58,237,0.12)] dark:hover:shadow-[0_8px_30px_rgb(124,58,237,0.2)] transition-all duration-300;
   }
 }
 

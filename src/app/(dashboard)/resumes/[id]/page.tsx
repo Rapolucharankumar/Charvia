@@ -54,7 +54,7 @@ export default async function ResumeDetailsPage({ params }: { params: Promise<{ 
           </Button>
         </Link>
         <div className="flex-1">
-          <h2 className="text-3xl font-bold tracking-tight truncate" title={resume.title}>
+          <h2 className="text-3xl font-sora font-bold tracking-tight truncate" title={resume.title}>
             {resume.title}
           </h2>
           <p className="text-muted-foreground text-sm">

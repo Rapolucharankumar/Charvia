@@ -7,7 +7,7 @@ import { ArrowRight, BarChart3, Briefcase, FileText, Sparkles, Target, Zap, Chec
 
 export default function LandingPage() {
   return (
-    <div className="relative min-h-screen overflow-hidden bg-[#F8FAFC]">
+    <div className="relative min-h-screen overflow-hidden bg-background">
       {/* Soft Ambient Gradients */}
       <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] rounded-full bg-gradient-to-br from-primary/10 to-secondary/10 blur-[100px] pointer-events-none" />
       <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] rounded-full bg-gradient-to-tl from-accent/10 to-primary/5 blur-[100px] pointer-events-none" />
@@ -30,11 +30,11 @@ export default function LandingPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.1, ease: "easeOut" }}
-            className="text-5xl md:text-7xl font-extrabold tracking-tight text-slate-900 leading-[1.1]"
+            className="text-5xl md:text-7xl font-sora font-extrabold tracking-tight text-foreground leading-[1.1]"
           >
-            Manufacture your <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">
-              dream career.
+            Land Better Jobs. <br />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-secondary to-accent">
+              Faster.
             </span>
           </motion.h1>
 
@@ -42,9 +42,9 @@ export default function LandingPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2, ease: "easeOut" }}
-            className="max-w-2xl text-lg md:text-xl text-slate-600 font-medium leading-relaxed"
+            className="max-w-2xl text-lg md:text-xl text-muted-foreground font-inter font-medium leading-relaxed"
           >
-            Charvia is the premium workspace for elite professionals. Build ATS-perfect resumes, master AI mock interviews, and land your next role with ease.
+            Analyze resumes, improve ATS scores, prepare for interviews, and track applications in one platform.
           </motion.p>
 
           <motion.div 
@@ -64,6 +64,15 @@ export default function LandingPage() {
               </Button>
             </Link>
           </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.4, ease: "easeOut" }}
+            className="w-full mt-16 max-w-5xl"
+          >
+            <img src="/dashboard-preview.png" alt="Dashboard Preview" className="w-full rounded-2xl shadow-2xl border border-border" />
+          </motion.div>
         </section>
 
         {/* Dashboard Showcase & Bento Grid */}
@@ -82,8 +91,8 @@ export default function LandingPage() {
               <div className="w-12 h-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center mb-6">
                 <BarChart3 className="h-6 w-6" />
               </div>
-              <h3 className="text-3xl font-bold text-slate-900 mb-4">Intelligent Career Command Center</h3>
-              <p className="text-slate-600 text-lg max-w-md leading-relaxed">
+              <h3 className="text-3xl font-sora font-bold text-foreground mb-4">Intelligent Career Command Center</h3>
+              <p className="text-muted-foreground font-inter text-lg max-w-md leading-relaxed">
                 Track your applications, monitor your ATS readiness score, and get actionable insights tailored specifically to your goals.
               </p>
             </div>
@@ -106,8 +115,8 @@ export default function LandingPage() {
               <div className="w-12 h-12 rounded-xl bg-secondary/10 text-secondary flex items-center justify-center mb-6">
                 <Zap className="h-6 w-6" />
               </div>
-              <h3 className="text-2xl font-bold text-slate-900 mb-4">AI Mock Interviews</h3>
-              <p className="text-slate-600 leading-relaxed">
+              <h3 className="text-2xl font-sora font-bold text-foreground mb-4">AI Mock Interviews</h3>
+              <p className="text-muted-foreground font-inter leading-relaxed">
                 Practice with our advanced AI interviewer. Receive real-time feedback on tone, technical accuracy, and STAR method usage.
               </p>
             </div>
@@ -124,8 +133,8 @@ export default function LandingPage() {
             <div className="w-12 h-12 rounded-xl bg-accent/10 text-accent flex items-center justify-center mb-6">
               <FileText className="h-6 w-6" />
             </div>
-            <h3 className="text-2xl font-bold text-slate-900 mb-4">Resume Optimization Engine</h3>
-            <p className="text-slate-600 leading-relaxed">
+            <h3 className="text-2xl font-sora font-bold text-foreground mb-4">Resume Optimization Engine</h3>
+            <p className="text-muted-foreground font-inter leading-relaxed">
               Drop your raw PDF into the engine. Our system automatically extracts keywords, realigns formatting, and ensures you bypass modern ATS filters.
             </p>
           </motion.div>
@@ -142,8 +151,8 @@ export default function LandingPage() {
             <div className="w-12 h-12 rounded-xl bg-success/10 text-success flex items-center justify-center mb-6">
               <Briefcase className="h-6 w-6" />
             </div>
-            <h3 className="text-2xl font-bold text-slate-900 mb-4">Mission Control Pipeline</h3>
-            <p className="text-slate-600 leading-relaxed max-w-xl">
+            <h3 className="text-2xl font-sora font-bold text-foreground mb-4">Mission Control Pipeline</h3>
+            <p className="text-muted-foreground font-inter leading-relaxed max-w-xl">
               Visualize your applications with an elegant, drag-and-drop Kanban board. Track every stage from the initial application to the final offer letter effortlessly.
             </p>
           </motion.div>

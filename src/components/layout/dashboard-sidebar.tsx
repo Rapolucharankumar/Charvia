@@ -30,7 +30,7 @@ export function DashboardSidebar() {
       {/* Logo Section */}
       <div className="mb-12 px-4">
         <Link href="/" className="flex items-center">
-          <span className="text-3xl font-playfair font-black tracking-tight text-white">Charvia<span className="text-primary">.</span></span>
+          <span className="text-3xl font-sora font-black tracking-tight text-white">Charvia<span className="text-primary">.</span></span>
         </Link>
       </div>
 
