@@ -120,10 +120,10 @@
 /* Premium Hybrid Utilities */
 @layer utilities {
   .glass {
-    @apply bg-white/95 dark:bg-[#111827]/95 backdrop-blur-3xl shadow-[0_4px_24px_-8px_rgba(17,24,39,0.08)] dark:shadow-[0_4px_24px_-8px_rgba(0,0,0,0.4)];
+    @apply bg-card/95 backdrop-blur-3xl shadow-[0_4px_24px_-8px_rgba(17,24,39,0.08)];
   }
   .glass-card {
-    @apply bg-white dark:bg-[#111827] rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.2)] hover:shadow-[0_8px_30px_rgb(124,58,237,0.12)] dark:hover:shadow-[0_8px_30px_rgb(124,58,237,0.2)] transition-all duration-300;
+    @apply bg-card text-card-foreground rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_8px_30px_rgb(124,58,237,0.12)] transition-all duration-300;
   }
 }
 

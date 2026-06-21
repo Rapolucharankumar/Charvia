@@ -149,7 +149,7 @@ export function DashboardClient({ firstName, stats }: DashboardClientProps) {
                 You have an upcoming interview scheduled. Engage with our AI simulator to refine your delivery and secure the offer.
               </p>
             </div>
-            <Link href="/interviews" className="inline-flex items-center gap-2 bg-white text-primary px-6 py-3 rounded-xl font-semibold shadow-sm hover:bg-gray-50 transition-colors w-fit">
+            <Link href="/interviews" className="inline-flex items-center gap-2 bg-card text-primary px-6 py-3 rounded-xl font-semibold shadow-sm hover:bg-muted transition-colors w-fit">
               Start Simulation <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
@@ -168,7 +168,7 @@ export function DashboardClient({ firstName, stats }: DashboardClientProps) {
               <span className="font-medium text-sm text-foreground">Matches Found</span>
               <span className="text-xs font-bold text-success bg-success/10 px-2 py-1 rounded-md">12 New</span>
             </div>
-            <Link href="/match" className="block w-full text-center text-sm font-medium text-foreground bg-white border border-border rounded-xl py-2.5 hover:bg-gray-50 transition-colors">
+            <Link href="/match" className="block w-full text-center text-sm font-medium text-foreground bg-card border border-border rounded-xl py-2.5 hover:bg-muted transition-colors">
               Review Matches
             </Link>
           </div>
