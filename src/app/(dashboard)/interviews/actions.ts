@@ -5,7 +5,7 @@ import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
 import { generateInterviewPrep } from "@/lib/ai/gemini";
 import { InterviewType, InterviewStatus } from "@prisma/client";
-import { checkProAccess } from "@/lib/subscription";
+import { checkInterviewLimit, incrementInterviewUsage } from "@/lib/subscription";
 
 export async function createInterviewPrep(company: string, role: string, experience: string) {
   const supabase = await createClient();
@@ -15,9 +15,9 @@ export async function createInterviewPrep(company: string, role: string, experie
     throw new Error("Unauthorized");
   }
 
-  const hasAccess = await checkProAccess(user.id);
-  if (!hasAccess) {
-    throw new Error("PRO_PLAN_REQUIRED");
+  const withinLimit = await checkInterviewLimit(user.id);
+  if (!withinLimit) {
+    throw new Error("FREE_LIMIT_EXCEEDED");
   }
 
   try {
@@ -40,6 +40,8 @@ export async function createInterviewPrep(company: string, role: string, experie
         feedback: sessionData,
       },
     });
+
+    await incrementInterviewUsage(user.id);
 
     revalidatePath("/interviews");
     return newSession;

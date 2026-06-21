@@ -4,7 +4,7 @@ import prisma from "@/lib/prisma";
 import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
 import { analyzeResume, autoOptimizeResume } from "@/lib/ai/gemini";
-import { checkAtsLimit } from "@/lib/subscription";
+import { checkAtsLimit, incrementAtsUsage } from "@/lib/subscription";
 
 export async function generateAnalysis(resumeId: string) {
   const supabase = await createClient();
@@ -64,6 +64,8 @@ export async function generateAnalysis(resumeId: string) {
       },
     });
 
+    await incrementAtsUsage(user.id);
+
     revalidatePath(`/resumes/${resumeId}`);
     return newAnalysis;
   } catch (error: any) {
@@ -78,6 +80,11 @@ export async function generateOptimization(resumeId: string, jobDescriptionId?: 
 
   if (authError || !user) {
     throw new Error("Unauthorized");
+  }
+
+  const withinLimit = await checkAtsLimit(user.id);
+  if (!withinLimit) {
+    throw new Error("FREE_LIMIT_EXCEEDED");
   }
 
   // Verify ownership
@@ -149,6 +156,8 @@ export async function generateOptimization(resumeId: string, jobDescriptionId?: 
         optimizedContent: optimizationResult,
       },
     });
+
+    await incrementAtsUsage(user.id);
 
     revalidatePath(`/resumes/${resumeId}`);
     return newOptimization;

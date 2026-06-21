@@ -36,6 +36,10 @@ export async function getAdminOverview() {
   
   const totalInterviews = await prisma.interviewSession.count();
 
+  const totalJobMatches = await prisma.matchScore.count();
+  
+  const waitlistSignups = await prisma.earlyAccessWaitlist.count();
+
   // Simple MRR estimation: PRO users * 499 (assuming 499 INR/month)
   const mrr = proUsers * 499;
 
@@ -44,6 +48,8 @@ export async function getAdminOverview() {
     proUsers,
     totalAnalyses,
     totalInterviews,
+    totalJobMatches,
+    waitlistSignups,
     mrr,
   };
 }

@@ -25,6 +25,10 @@ model User {
   currentPeriodEnd       DateTime?
   createdAt              DateTime           @default(now())
   updatedAt              DateTime           @updatedAt
+  resumeAnalysisUsed     Int                @default(0)
+  jobMatchesUsed         Int                @default(0)
+  interviewQuestionsUsed Int                @default(0)
+  lastResetDate          DateTime           @default(now())
   resumes           Resume[]
   jobDescriptions   JobDescription[]
   applications      Application[]

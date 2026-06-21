@@ -1,6 +1,8 @@
 import prisma from "./prisma";
 
 export const FREE_ATS_LIMIT = 3;
+export const FREE_JOB_MATCH_LIMIT = 5;
+export const FREE_INTERVIEW_LIMIT = 10;
 
 export async function getUserSubscriptionPlan(userId: string) {
   const user = await prisma.user.findUnique({
@@ -9,8 +11,10 @@ export async function getUserSubscriptionPlan(userId: string) {
       plan: true,
       subscriptionStatus: true,
       currentPeriodEnd: true,
-      razorpayCustomerId: true,
-      razorpaySubscriptionId: true,
+      resumeAnalysisUsed: true,
+      jobMatchesUsed: true,
+      interviewQuestionsUsed: true,
+      lastResetDate: true,
     },
   });
 
@@ -19,11 +23,7 @@ export async function getUserSubscriptionPlan(userId: string) {
   }
 
   // Check if subscription is active
-  const isPro =
-    user.plan === "PRO" &&
-    user.subscriptionStatus === "active" &&
-    user.currentPeriodEnd &&
-    user.currentPeriodEnd.getTime() > Date.now();
+  const isPro = user.plan === "PRO";
 
   return {
     ...user,
@@ -31,35 +31,123 @@ export async function getUserSubscriptionPlan(userId: string) {
   };
 }
 
-export async function checkAtsLimit(userId: string) {
-  const userPlan = await getUserSubscriptionPlan(userId);
+export async function syncUserUsage(userId: string) {
+  const user = await prisma.user.findUnique({ where: { id: userId } });
+  if (!user) return null;
 
-  if (userPlan.isPro) {
-    return true; // Pro users have unlimited access
+  const now = new Date();
+  const lastReset = user.lastResetDate;
+  
+  let needsUpdate = false;
+  let updateData: any = {};
+
+  // Check Monthly Reset (for ATS and Job Matches)
+  if (
+    lastReset.getMonth() !== now.getMonth() || 
+    lastReset.getFullYear() !== now.getFullYear()
+  ) {
+    needsUpdate = true;
+    updateData.resumeAnalysisUsed = 0;
+    updateData.jobMatchesUsed = 0;
   }
 
-  const startOfDay = new Date();
-  startOfDay.setHours(0, 0, 0, 0);
+  // Check Daily Reset (for Interview Questions)
+  if (
+    lastReset.getDate() !== now.getDate() ||
+    lastReset.getMonth() !== now.getMonth() ||
+    lastReset.getFullYear() !== now.getFullYear()
+  ) {
+    needsUpdate = true;
+    updateData.interviewQuestionsUsed = 0;
+  }
 
-  const endOfDay = new Date();
-  endOfDay.setHours(23, 59, 59, 999);
+  if (needsUpdate) {
+    updateData.lastResetDate = now;
+    const updatedUser = await prisma.user.update({
+      where: { id: userId },
+      data: updateData
+    });
+    return updatedUser;
+  }
 
-  const usageCount = await prisma.resumeAnalysis.count({
-    where: {
-      resume: {
-        userId: userId,
-      },
-      createdAt: {
-        gte: startOfDay,
-        lte: endOfDay,
-      },
-    },
+  return user;
+}
+
+export async function checkAtsLimit(userId: string) {
+  const userPlan = await getUserSubscriptionPlan(userId);
+  if (userPlan.isPro) return true;
+
+  const user = await syncUserUsage(userId);
+  if (!user) return false;
+
+  return user.resumeAnalysisUsed < FREE_ATS_LIMIT;
+}
+
+export async function checkJobMatchLimit(userId: string) {
+  const userPlan = await getUserSubscriptionPlan(userId);
+  if (userPlan.isPro) return true;
+
+  const user = await syncUserUsage(userId);
+  if (!user) return false;
+
+  return user.jobMatchesUsed < FREE_JOB_MATCH_LIMIT;
+}
+
+export async function checkInterviewLimit(userId: string) {
+  const userPlan = await getUserSubscriptionPlan(userId);
+  if (userPlan.isPro) return true;
+
+  const user = await syncUserUsage(userId);
+  if (!user) return false;
+
+  return user.interviewQuestionsUsed < FREE_INTERVIEW_LIMIT;
+}
+
+export async function incrementAtsUsage(userId: string) {
+  await prisma.user.update({
+    where: { id: userId },
+    data: { resumeAnalysisUsed: { increment: 1 } }
   });
+}
 
-  return usageCount < FREE_ATS_LIMIT;
+export async function incrementJobMatchUsage(userId: string) {
+  await prisma.user.update({
+    where: { id: userId },
+    data: { jobMatchesUsed: { increment: 1 } }
+  });
+}
+
+export async function incrementInterviewUsage(userId: string) {
+  await prisma.user.update({
+    where: { id: userId },
+    data: { interviewQuestionsUsed: { increment: 1 } }
+  });
 }
 
 export async function checkProAccess(userId: string) {
   const userPlan = await getUserSubscriptionPlan(userId);
   return userPlan.isPro;
+}
+
+export async function getUserUsageStats(userId: string) {
+  const userPlan = await getUserSubscriptionPlan(userId);
+  const user = await syncUserUsage(userId);
+  
+  if (!user) throw new Error("User not found");
+
+  return {
+    isPro: userPlan.isPro,
+    resumeAnalysis: {
+      used: user.resumeAnalysisUsed,
+      limit: FREE_ATS_LIMIT
+    },
+    jobMatches: {
+      used: user.jobMatchesUsed,
+      limit: FREE_JOB_MATCH_LIMIT
+    },
+    interviewQuestions: {
+      used: user.interviewQuestionsUsed,
+      limit: FREE_INTERVIEW_LIMIT
+    }
+  };
 }

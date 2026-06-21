@@ -2,6 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import prisma from "@/lib/prisma";
 import { DashboardClient } from "./dashboard-client";
+import { getUserUsageStats } from "@/lib/subscription";
 
 export default async function DashboardPage() {
   const supabase = await createClient();
@@ -52,9 +53,11 @@ export default async function DashboardPage() {
     atsAvg: avgAtsScore,
   };
 
+  const usageStats = await getUserUsageStats(user.id);
+
   return (
     <div className="flex-1 p-6 md:p-12 w-full">
-      <DashboardClient firstName={firstName} stats={stats} />
+      <DashboardClient firstName={firstName} stats={stats} usageStats={usageStats} />
     </div>
   );
 }

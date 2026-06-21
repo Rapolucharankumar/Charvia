@@ -14,9 +14,15 @@ interface DashboardClientProps {
     readiness: number;
     atsAvg: number;
   };
+  usageStats: {
+    isPro: boolean;
+    resumeAnalysis: { used: number; limit: number };
+    jobMatches: { used: number; limit: number };
+    interviewQuestions: { used: number; limit: number };
+  };
 }
 
-export function DashboardClient({ firstName, stats }: DashboardClientProps) {
+export function DashboardClient({ firstName, stats, usageStats }: DashboardClientProps) {
   const container = {
     hidden: { opacity: 0 },
     show: {
@@ -131,6 +137,29 @@ export function DashboardClient({ firstName, stats }: DashboardClientProps) {
 
       </div>
 
+      {/* USAGE LIMITS ROW */}
+      <motion.div variants={item} className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <UsageCard 
+          title="Resume Analyses" 
+          used={usageStats.resumeAnalysis.used} 
+          limit={usageStats.resumeAnalysis.limit} 
+          isPro={usageStats.isPro}
+        />
+        <UsageCard 
+          title="Job Matches" 
+          used={usageStats.jobMatches.used} 
+          limit={usageStats.jobMatches.limit} 
+          isPro={usageStats.isPro}
+        />
+        <UsageCard 
+          title="Interview Questions" 
+          used={usageStats.interviewQuestions.used} 
+          limit={usageStats.interviewQuestions.limit} 
+          isPro={usageStats.isPro}
+          label="Today"
+        />
+      </motion.div>
+
       {/* BOTTOM ROW - NEXT ACTION */}
       <motion.div variants={item} className="grid grid-cols-1 md:grid-cols-2 gap-6">
         
@@ -177,5 +206,40 @@ export function DashboardClient({ firstName, stats }: DashboardClientProps) {
       </motion.div>
 
     </motion.div>
+  );
+}
+
+function UsageCard({ title, used, limit, isPro, label = "Used" }: { title: string, used: number, limit: number, isPro: boolean, label?: string }) {
+  const percentage = isPro ? 0 : Math.min(100, (used / limit) * 100);
+  
+  return (
+    <div className="glass-card p-6 flex flex-col justify-between">
+      <div className="flex justify-between items-center mb-4">
+        <h3 className="font-semibold font-inter text-foreground">{title}</h3>
+        {!isPro && (
+          <span className="text-xs font-medium text-muted-foreground bg-muted px-2 py-1 rounded-md">
+            {used} / {limit} {label}
+          </span>
+        )}
+        {isPro && (
+          <span className="text-xs font-bold text-primary bg-primary/10 px-2 py-1 rounded-md">
+            Unlimited
+          </span>
+        )}
+      </div>
+      
+      {!isPro ? (
+        <div className="w-full bg-muted rounded-full h-2 mt-2">
+          <div 
+            className={`h-2 rounded-full transition-all duration-1000 ease-out ${percentage >= 100 ? 'bg-destructive' : 'bg-primary'}`} 
+            style={{ width: `${percentage}%` }} 
+          />
+        </div>
+      ) : (
+        <div className="w-full bg-primary/20 rounded-full h-2 mt-2 flex items-center justify-center overflow-hidden">
+           <div className="h-full w-full bg-primary/40 animate-pulse" />
+        </div>
+      )}
+    </div>
   );
 }

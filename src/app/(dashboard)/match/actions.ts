@@ -4,6 +4,7 @@ import prisma from "@/lib/prisma";
 import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
 import { calculateJobMatch } from "@/lib/ai/gemini";
+import { checkJobMatchLimit, incrementJobMatchUsage } from "@/lib/subscription";
 
 
 export async function generateMatchScore(
@@ -17,6 +18,11 @@ export async function generateMatchScore(
 
   if (authError || !user) {
     throw new Error("Unauthorized");
+  }
+
+  const withinLimit = await checkJobMatchLimit(user.id);
+  if (!withinLimit) {
+    throw new Error("FREE_LIMIT_EXCEEDED");
   }
 
   // 1. Fetch Resume to ensure ownership and get fileUrl
@@ -74,6 +80,8 @@ export async function generateMatchScore(
         details: matchResult,
       },
     });
+
+    await incrementJobMatchUsage(user.id);
 
     revalidatePath("/match");
     return newMatchScore;
