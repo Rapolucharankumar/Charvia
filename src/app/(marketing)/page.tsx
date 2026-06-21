@@ -65,14 +65,7 @@ export default function LandingPage() {
             </Link>
           </motion.div>
 
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.4, ease: "easeOut" }}
-            className="w-full mt-16 max-w-5xl"
-          >
-            <img src="/dashboard-preview.png" alt="Dashboard Preview" className="w-full rounded-2xl shadow-2xl border border-border" />
-          </motion.div>
+
         </section>
 
         {/* Dashboard Showcase & Bento Grid */}

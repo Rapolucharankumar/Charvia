@@ -119,8 +119,8 @@ export function KanbanBoard({ initialData, onAdd }: KanbanBoardProps) {
                   <div
                     ref={provided.innerRef}
                     {...provided.droppableProps}
-                    className={`space-y-3 min-h-[150px] transition-colors rounded-md ${
-                      snapshot.isDraggingOver ? "bg-muted/50" : ""
+                    className={`space-y-3 min-h-[150px] transition-all duration-300 rounded-xl p-1 ${
+                      snapshot.isDraggingOver ? "bg-primary/5 ring-2 ring-primary/20 shadow-inner" : ""
                     }`}
                   >
                     {getApplicationsByStatus(stage.id).map((app, index) => (
@@ -130,10 +130,10 @@ export function KanbanBoard({ initialData, onAdd }: KanbanBoardProps) {
                             ref={provided.innerRef}
                             {...provided.draggableProps}
                             {...provided.dragHandleProps}
-                            className={`${snapshot.isDragging ? "z-50" : ""}`}
+                            className={`${snapshot.isDragging ? "z-50" : "hover:-translate-y-1 transition-transform duration-300"}`}
                             style={{ ...provided.draggableProps.style }}
                           >
-                            <Card className={`border-none shadow-sm hover:shadow-md transition-all cursor-grab active:cursor-grabbing bg-card rounded-xl border-l-4 ${stage.border}`}>
+                            <Card className={`border-none shadow-sm transition-all duration-300 cursor-grab active:cursor-grabbing bg-card rounded-xl border-l-4 ${stage.border} ${snapshot.isDragging ? "ring-2 ring-primary/40 shadow-2xl scale-105 rotate-2" : "hover:shadow-md"}`}>
                               <CardContent className="p-4 flex flex-col gap-2">
                                 <div className="flex justify-between items-start">
                                   <div className="font-medium leading-none line-clamp-1">{app.jobTitle}</div>
