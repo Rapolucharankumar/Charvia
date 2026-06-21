@@ -5,7 +5,7 @@ import { Check, Sparkles, Zap, Shield, Rocket } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 
 export default function ProPage() {
   const [formData, setFormData] = useState({
@@ -64,9 +64,7 @@ export default function ProPage() {
         <Link href="/" className="text-2xl font-sora font-bold text-foreground">
           Charvia
         </Link>
-        <Button variant="ghost" asChild>
-          <Link href="/dashboard">Back to Dashboard</Link>
-        </Button>
+        <Link href="/dashboard" className={buttonVariants({ variant: "ghost" })}>Back to Dashboard</Link>
       </nav>
 
       <main className="flex-1 w-full max-w-6xl mx-auto px-6 py-12 md:py-24 grid grid-cols-1 lg:grid-cols-2 gap-16 z-10">

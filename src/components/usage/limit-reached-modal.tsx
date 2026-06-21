@@ -8,7 +8,8 @@ import {
   DialogTitle,
   DialogFooter,
 } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 import { Sparkles } from "lucide-react";
 import Link from "next/link";
 
@@ -39,9 +40,9 @@ export function LimitReachedModal({ isOpen, onClose, feature = "this feature" }:
           </DialogHeader>
 
           <DialogFooter className="relative z-10 flex flex-col sm:flex-col gap-3 sm:space-x-0 pt-2">
-            <Button asChild className="w-full text-base py-6 rounded-xl shadow-lg" size="lg">
-              <Link href="/pro">Join Early Access</Link>
-            </Button>
+            <Link href="/pro" className={cn(buttonVariants({ size: "lg" }), "w-full text-base py-6 rounded-xl shadow-lg")}>
+              Join Early Access
+            </Link>
             <Button 
               variant="ghost" 
               className="w-full text-muted-foreground hover:text-foreground" 
