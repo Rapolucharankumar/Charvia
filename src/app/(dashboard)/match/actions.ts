@@ -3,7 +3,7 @@
 import prisma from "@/lib/prisma";
 import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
-import { calculateJobMatch } from "@/lib/ai/gemini";
+import { calculateJobMatch, autoOptimizeResume } from "@/lib/ai/gemini";
 import { checkJobMatchLimit, incrementJobMatchUsage } from "@/lib/subscription";
 
 
@@ -68,8 +68,11 @@ export async function generateMatchScore(
       },
     });
 
-    // 4. Call Gemini AI to calculate job match
-    const matchResult = await calculateJobMatch(resumeText, jobDescriptionText);
+    // 4. Call Gemini AI to calculate job match and optimize
+    const [matchResult, optimizationResult] = await Promise.all([
+      calculateJobMatch(resumeText, jobDescriptionText),
+      autoOptimizeResume(resumeText, jobDescriptionText)
+    ]);
 
     // 5. Save MatchScore to DB
     const newMatchScore = await prisma.matchScore.create({
@@ -77,7 +80,13 @@ export async function generateMatchScore(
         resumeId: resume.id,
         jobDescriptionId: jobDescription.id,
         score: matchResult.matchScore,
-        details: matchResult,
+        details: {
+          ...matchResult,
+          potentialMatchScore: optimizationResult.newScore,
+          resumeChangesApplied: optimizationResult.changeSummary,
+          optimizedResume: optimizationResult,
+          originalFileUrl: resume.fileUrl
+        },
       },
     });
 
