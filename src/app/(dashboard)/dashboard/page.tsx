@@ -25,15 +25,15 @@ export default async function DashboardPage() {
   });
 
   const firstName = dbUser?.firstName || user.email?.split('@')[0] || "User";
-  const applicationsCount = dbUser?.applications.length || 0;
-  const resumesCount = dbUser?.resumes.length || 0;
-  const interviewsCount = dbUser?.interviewSessions.length || 0;
+  const applicationsCount = dbUser?.applications?.length || 0;
+  const resumesCount = dbUser?.resumes?.length || 0;
+  const interviewsCount = dbUser?.interviewSessions?.length || 0;
 
   // Calculate Average ATS Score
   let totalScore = 0;
   let scoreCount = 0;
-  dbUser?.resumes.forEach(resume => {
-    resume.analyses.forEach(analysis => {
+  dbUser?.resumes?.forEach(resume => {
+    resume.analyses?.forEach(analysis => {
       if (analysis.overallScore) {
         totalScore += analysis.overallScore;
         scoreCount++;
