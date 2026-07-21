@@ -157,8 +157,8 @@ export default function NewPortfolioPage() {
             ) : (
               <div className="p-4 border border-dashed rounded-md bg-muted/30 text-center">
                 <p className="text-sm text-muted-foreground mb-2">You don't have any resumes yet.</p>
-                <Button variant="outline" size="sm" onClick={() => router.push('/resumes/new')}>
-                  Create a Resume first
+                <Button variant="outline" size="sm" onClick={() => router.push('/resumes')}>
+                  Upload a Resume first
                 </Button>
               </div>
             )}
