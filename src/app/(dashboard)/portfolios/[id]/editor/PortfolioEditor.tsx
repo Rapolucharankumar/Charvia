@@ -217,10 +217,12 @@ export function PortfolioEditor({ initialPortfolio }: PortfolioEditorProps) {
                 <Label>Portfolio URL</Label>
                 <div className="flex gap-2">
                   <Input value={portfolio.username} disabled />
-                  <Button variant="outline" size="icon" asChild>
-                    <Link href={`https://${portfolio.username}.charvia.app`} target="_blank">
-                      <ExternalLink className="h-4 w-4" />
-                    </Link>
+                  <Button 
+                    variant="outline" 
+                    size="icon" 
+                    onClick={() => window.open(`https://${portfolio.username}.charvia.app`, '_blank')}
+                  >
+                    <ExternalLink className="h-4 w-4" />
                   </Button>
                 </div>
               </div>
