@@ -19,7 +19,16 @@ export async function getUserSubscriptionPlan(userId: string) {
   });
 
   if (!user) {
-    throw new Error("User not found");
+    return {
+      plan: "FREE",
+      subscriptionStatus: null,
+      currentPeriodEnd: null,
+      resumeAnalysisUsed: 0,
+      jobMatchesUsed: 0,
+      interviewQuestionsUsed: 0,
+      lastResetDate: new Date(),
+      isPro: false,
+    };
   }
 
   // Check if subscription is active
@@ -133,7 +142,14 @@ export async function getUserUsageStats(userId: string) {
   const userPlan = await getUserSubscriptionPlan(userId);
   const user = await syncUserUsage(userId);
   
-  if (!user) throw new Error("User not found");
+  if (!user) {
+    return {
+      isPro: false,
+      resumeAnalysis: { used: 0, limit: FREE_ATS_LIMIT },
+      jobMatches: { used: 0, limit: FREE_JOB_MATCH_LIMIT },
+      interviewQuestions: { used: 0, limit: FREE_INTERVIEW_LIMIT }
+    };
+  }
 
   return {
     isPro: userPlan.isPro,
