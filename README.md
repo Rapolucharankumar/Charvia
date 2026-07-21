@@ -78,6 +78,3 @@ Contributions, issues, and feature requests are welcome! Feel free to check the 
 
 ---
 
-<div align="center">
-  Built with ❤️ using Next.js and Prisma.
-</div>
