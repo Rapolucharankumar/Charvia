@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import prisma from "@/lib/prisma";
 
-export async function PUT(req: Request, { params }: { params: { id: string } }) {
+export async function PUT(req: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
@@ -14,9 +14,10 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
     const body = await req.json();
     const { theme, colorHex, fontFamily, seoTitle, seoDescription, isPublished, sections } = body;
 
+    const portfolioId = (await params).id;
     // First update the main portfolio record
     const portfolio = await prisma.portfolio.update({
-      where: { id: params.id, userId: user.id },
+      where: { id: portfolioId, userId: user.id },
       data: {
         theme,
         colorHex,

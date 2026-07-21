@@ -3,14 +3,16 @@ import prisma from "@/lib/prisma";
 import { redirect, notFound } from "next/navigation";
 import { PortfolioEditor } from "./PortfolioEditor";
 
-export default async function PortfolioEditorPage({ params }: { params: { id: string } }) {
+export default async function PortfolioEditorPage({ params }: { params: Promise<{ id: string }> }) {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
 
   if (!user) redirect("/login");
 
+  const portfolioId = (await params).id;
+
   const portfolio = await prisma.portfolio.findUnique({
-    where: { id: params.id, userId: user.id },
+    where: { id: portfolioId, userId: user.id },
     include: {
       sections: {
         orderBy: { order: "asc" },

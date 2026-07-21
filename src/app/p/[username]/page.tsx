@@ -3,12 +3,13 @@ import { notFound } from "next/navigation";
 import { Metadata } from "next";
 
 interface PortfolioPageProps {
-  params: { username: string };
+  params: Promise<{ username: string }>;
 }
 
 export async function generateMetadata({ params }: PortfolioPageProps): Promise<Metadata> {
+  const username = (await params).username;
   const portfolio = await prisma.portfolio.findUnique({
-    where: { username: params.username },
+    where: { username },
   });
 
   if (!portfolio) {
@@ -23,8 +24,9 @@ export async function generateMetadata({ params }: PortfolioPageProps): Promise<
 }
 
 export default async function PublicPortfolioPage({ params }: PortfolioPageProps) {
+  const username = (await params).username;
   const portfolio = await prisma.portfolio.findUnique({
-    where: { username: params.username },
+    where: { username },
     include: {
       sections: {
         where: { isHidden: false },
