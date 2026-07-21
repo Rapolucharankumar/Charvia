@@ -138,7 +138,7 @@ export default function NewPortfolioPage() {
             ) : resumes.length > 0 ? (
               <Select 
                 value={formData.resumeId} 
-                onValueChange={(val) => setFormData({ ...formData, resumeId: val })}
+                onValueChange={(val) => setFormData({ ...formData, resumeId: val || "" })}
               >
                 <SelectTrigger>
                   <SelectValue placeholder="Select a resume" />
@@ -168,7 +168,7 @@ export default function NewPortfolioPage() {
             <Label>Starting Theme</Label>
             <Select 
               value={formData.theme} 
-              onValueChange={(val) => setFormData({ ...formData, theme: val })}
+              onValueChange={(val) => setFormData({ ...formData, theme: val || "minimal" })}
             >
               <SelectTrigger>
                 <SelectValue placeholder="Select theme" />

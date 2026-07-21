@@ -169,7 +169,7 @@ export function PortfolioEditor({ initialPortfolio }: PortfolioEditorProps) {
                 <Label>Theme</Label>
                 <Select 
                   value={portfolio.theme} 
-                  onValueChange={(val) => setPortfolio({ ...portfolio, theme: val })}
+                  onValueChange={(val) => setPortfolio({ ...portfolio, theme: val || "minimal" })}
                 >
                   <SelectTrigger><SelectValue /></SelectTrigger>
                   <SelectContent>
