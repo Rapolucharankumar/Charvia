@@ -34,6 +34,7 @@ model User {
   applications      Application[]
   interviewSessions InterviewSession[]
   introductions     SelfIntroduction[]
+  portfolios        Portfolio[]
 }
 
 model Resume {
@@ -50,6 +51,7 @@ model Resume {
   optimizations   ResumeOptimization[]
   matchScores     MatchScore[]
   applications    Application[]
+  portfolios      Portfolio[]
 }
 
 model JobDescription {
@@ -181,4 +183,51 @@ model EarlyAccessWaitlist {
   createdAt      DateTime @default(now())
 
   @@map("early_access_waitlist")
+}
+
+model Portfolio {
+  id              String             @id @default(uuid()) @db.Uuid
+  userId          String             @db.Uuid
+  user            User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  resumeId        String?            @db.Uuid
+  resume          Resume?            @relation(fields: [resumeId], references: [id], onDelete: SetNull)
+  username        String             @unique // for username.charvia.app
+  theme           String             @default("minimal")
+  colorHex        String             @default("#000000")
+  fontFamily      String             @default("inter")
+  customDomain    String?            @unique
+  seoTitle        String?
+  seoDescription  String?
+  isPublished     Boolean            @default(false)
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @updatedAt
+  sections        PortfolioSection[]
+  analytics       PortfolioAnalytics[]
+}
+
+model PortfolioSection {
+  id              String    @id @default(uuid()) @db.Uuid
+  portfolioId     String    @db.Uuid
+  portfolio       Portfolio @relation(fields: [portfolioId], references: [id], onDelete: Cascade)
+  type            String    // "hero", "about", "skills", "experience", "projects", etc.
+  order           Int       @default(0)
+  isHidden        Boolean   @default(false)
+  content         Json      // The specific content for this section, overrides resume if needed
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  @@unique([portfolioId, type])
+}
+
+model PortfolioAnalytics {
+  id              String    @id @default(uuid()) @db.Uuid
+  portfolioId     String    @db.Uuid
+  portfolio       Portfolio @relation(fields: [portfolioId], references: [id], onDelete: Cascade)
+  visitorId       String?   // Hashed IP or cookie ID
+  pageViews       Int       @default(1)
+  resumeDownloads Int       @default(0)
+  contactClicks   Int       @default(0)
+  date            DateTime  @default(now()) @db.Date // Analytics by day
+
+  @@unique([portfolioId, date, visitorId])
 }
