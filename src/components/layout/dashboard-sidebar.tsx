@@ -6,11 +6,12 @@ import { cn } from "@/lib/utils";
 import { logout } from "@/app/(auth)/actions";
 import { useState } from "react";
 import { ProModal } from "@/components/pro-modal";
-import { LayoutDashboard, FileText, Target, UserCircle, Briefcase, Calendar, Settings, Crown, Map } from "lucide-react";
+import { LayoutDashboard, FileText, Target, UserCircle, Briefcase, Calendar, Settings, Crown, Map, Globe } from "lucide-react";
 
 export const sidebarNavItems = [
   { title: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
   { title: "Resumes", href: "/resumes", icon: FileText },
+  { title: "Portfolios", href: "/portfolios", icon: Globe },
   { title: "Job Match", href: "/match", icon: Target },
   { title: "Self Intro", href: "/intro", icon: UserCircle },
   { title: "Applications", href: "/applications", icon: Briefcase },

@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ArrowRight, Briefcase, Calendar, Target, FileText } from "lucide-react";
+import { ArrowRight, Briefcase, Calendar, Target, FileText, Globe } from "lucide-react";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 
@@ -53,10 +53,16 @@ export function DashboardClient({ firstName, stats, usageStats }: DashboardClien
             Here is your actionable career snapshot for today.
           </p>
         </div>
-        <Link href="/resumes" className="inline-flex items-center gap-2 bg-primary text-white px-6 py-3 rounded-full font-medium shadow-sm hover:shadow-md hover:bg-primary/90 transition-all font-inter">
-          <FileText className="w-4 h-4" />
-          Analyze New Resume
-        </Link>
+        <div className="flex flex-col sm:flex-row gap-3">
+          <Link href="/resumes" className="inline-flex items-center gap-2 bg-muted text-foreground px-6 py-3 rounded-full font-medium shadow-sm hover:shadow-md hover:bg-muted/80 transition-all font-inter">
+            <FileText className="w-4 h-4" />
+            Analyze Resume
+          </Link>
+          <Link href="/portfolios/new" className="inline-flex items-center gap-2 bg-primary text-primary-foreground px-6 py-3 rounded-full font-medium shadow-sm hover:shadow-md hover:bg-primary/90 transition-all font-inter">
+            <Globe className="w-4 h-4" />
+            Build AI Portfolio
+          </Link>
+        </div>
       </motion.div>
 
       {/* TOP METRICS ROW */}
