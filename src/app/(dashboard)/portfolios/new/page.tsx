@@ -76,8 +76,7 @@ export default function NewPortfolioPage() {
           username: formData.username,
           theme: formData.theme,
           resumeId: formData.resumeId,
-          // We can pass the enhanced data here in a real implementation
-          // Or update the sections right after creation
+          sectionsData: enhancedData.data
         })
       });
 

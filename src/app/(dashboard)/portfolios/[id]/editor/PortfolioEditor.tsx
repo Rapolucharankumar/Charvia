@@ -11,6 +11,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { GripVertical, Eye, EyeOff, Save, ExternalLink } from "lucide-react";
 import { toast } from "sonner";
 import Link from "next/link";
+import { PortfolioPreview } from "./PortfolioPreview";
 
 interface PortfolioEditorProps {
   initialPortfolio: any;
@@ -256,18 +257,9 @@ export function PortfolioEditor({ initialPortfolio }: PortfolioEditorProps) {
             </div>
           </div>
 
-          {/* Actual Live Preview Content would render here */}
-          <div className="flex-1 p-8 text-center flex flex-col items-center justify-center text-muted-foreground">
-            <p>Live Preview Component</p>
-            <p className="text-sm">Theme: {portfolio.theme}, Color: {portfolio.colorHex}</p>
-            <div className="mt-8 text-left w-full max-w-md border rounded-md p-4 bg-muted/10">
-              <h4 className="font-medium mb-2">Visible Sections order:</h4>
-              <ul className="list-decimal pl-4 space-y-1 text-sm">
-                {sections.filter((s: any) => !s.isHidden).map((s: any) => (
-                  <li key={s.id}>{s.type} {s.type === 'hero' && s.content?.title ? `- ${s.content.title}` : ''}</li>
-                ))}
-              </ul>
-            </div>
+          {/* Actual Live Preview Content */}
+          <div className="flex-1 w-full relative">
+            <PortfolioPreview portfolio={portfolio} sections={sections} />
           </div>
           
         </div>

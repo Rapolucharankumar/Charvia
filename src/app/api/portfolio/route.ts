@@ -40,7 +40,7 @@ export async function POST(req: Request) {
     }
 
     const body = await req.json();
-    const { username, theme, resumeId, colorHex, fontFamily } = body;
+    const { username, theme, resumeId, colorHex, fontFamily, sectionsData } = body;
 
     if (!username) {
       return NextResponse.json({ error: "Username is required" }, { status: 400 });
@@ -64,7 +64,13 @@ export async function POST(req: Request) {
         fontFamily: fontFamily || "inter",
         resumeId,
         sections: {
-          create: [
+          create: sectionsData ? [
+            { type: "hero", order: 0, content: sectionsData.hero || { title: "Hello", subtitle: "" } },
+            { type: "about", order: 1, content: sectionsData.about || { text: "" } },
+            { type: "skills", order: 2, content: { skills: sectionsData.skills || [] } },
+            { type: "experience", order: 3, content: { jobs: sectionsData.experience || [] } },
+            { type: "projects", order: 4, content: { projects: sectionsData.projects || [] } },
+          ] : [
             { type: "hero", order: 0, content: { title: "Hello, I am a Professional" } },
             { type: "about", order: 1, content: { text: "I build great things." } },
             { type: "skills", order: 2, content: { skills: [] } },
