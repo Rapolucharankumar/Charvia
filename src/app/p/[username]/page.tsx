@@ -219,15 +219,41 @@ export default async function PublicPortfolioPage({ params }: PortfolioPageProps
                   </div>
 
                   <div className="flex flex-wrap gap-2.5">
-                    {Array.isArray(content.skills) ? (
-                      content.skills.map((skill: string) => (
-                        <span
-                          key={skill}
-                          className="px-4 py-2 rounded-2xl bg-zinc-900 border border-zinc-800 text-zinc-200 font-mono text-xs hover:border-indigo-500/50 transition-colors"
-                        >
-                          {skill}
-                        </span>
-                      ))
+                    {Array.isArray(content.skills) && content.skills.length > 0 ? (
+                      content.skills.map((skillItem: any, idx: number) => {
+                        if (typeof skillItem === "string") {
+                          return (
+                            <span
+                              key={idx}
+                              className="px-4 py-2 rounded-2xl bg-zinc-900 border border-zinc-800 text-zinc-200 font-mono text-xs hover:border-indigo-500/50 transition-colors"
+                            >
+                              {skillItem}
+                            </span>
+                          );
+                        }
+                        if (skillItem && Array.isArray(skillItem.items)) {
+                          return (
+                            <div key={idx} className="w-full space-y-2 mb-2">
+                              {skillItem.category && (
+                                <div className="text-xs font-mono text-indigo-400 font-bold uppercase tracking-wider">
+                                  {skillItem.category}
+                                </div>
+                              )}
+                              <div className="flex flex-wrap gap-2">
+                                {skillItem.items.map((subSkill: string, subIdx: number) => (
+                                  <span
+                                    key={subIdx}
+                                    className="px-3.5 py-1.5 rounded-xl bg-zinc-900 border border-zinc-800 text-zinc-200 font-mono text-xs hover:border-indigo-500/50 transition-colors"
+                                  >
+                                    {subSkill}
+                                  </span>
+                                ))}
+                              </div>
+                            </div>
+                          );
+                        }
+                        return null;
+                      })
                     ) : (
                       ["Next.js", "TypeScript", "Tailwind CSS", "React", "Node.js", "PostgreSQL", "Python", "Prisma"].map((skill) => (
                         <span
@@ -251,52 +277,59 @@ export default async function PublicPortfolioPage({ params }: PortfolioPageProps
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {Array.isArray(content.items) && content.items.length > 0 ? (
-                      content.items.map((proj: any, idx: number) => (
-                        <div
-                          key={idx}
-                          className="p-6 rounded-3xl border border-zinc-800 bg-zinc-950/80 space-y-4 hover:border-indigo-500/50 transition-all group flex flex-col justify-between"
-                        >
-                          <div className="space-y-2">
-                            <h3 className="text-xl font-bold text-white group-hover:text-indigo-400 transition-colors">
-                              {proj.title}
-                            </h3>
-                            <p className="text-sm text-zinc-400 font-light leading-relaxed">
-                              {proj.description}
-                            </p>
-                          </div>
-
-                          <div className="space-y-4 pt-4 border-t border-zinc-900">
-                            {Array.isArray(proj.techStack) && (
-                              <div className="flex flex-wrap gap-1.5">
-                                {proj.techStack.map((tech: string) => (
-                                  <span key={tech} className="px-2.5 py-0.5 rounded-lg bg-zinc-900 text-[11px] font-mono text-zinc-400 border border-zinc-800">
-                                    {tech}
-                                  </span>
-                                ))}
+                    {(() => {
+                      const projectList = Array.isArray(content.projects) ? content.projects : (Array.isArray(content.items) ? content.items : []);
+                      return projectList.length > 0 ? (
+                        projectList.map((proj: any, idx: number) => {
+                          const title = proj.title || proj.name;
+                          const techList = proj.techStack || proj.technologies || [];
+                          return (
+                            <div
+                              key={idx}
+                              className="p-6 rounded-3xl border border-zinc-800 bg-zinc-950/80 space-y-4 hover:border-indigo-500/50 transition-all group flex flex-col justify-between"
+                            >
+                              <div className="space-y-2">
+                                <h3 className="text-xl font-bold text-white group-hover:text-indigo-400 transition-colors">
+                                  {title}
+                                </h3>
+                                <p className="text-sm text-zinc-400 font-light leading-relaxed">
+                                  {proj.description}
+                                </p>
                               </div>
-                            )}
 
-                            <div className="flex items-center gap-3 text-xs font-mono">
-                              {proj.link && (
-                                <a href={proj.link} target="_blank" rel="noreferrer" className="text-indigo-400 hover:text-indigo-300 flex items-center gap-1">
-                                  <span>Live Demo</span> <ExternalLink className="w-3.5 h-3.5" />
-                                </a>
-                              )}
-                              {proj.github && (
-                                <a href={proj.github} target="_blank" rel="noreferrer" className="text-zinc-400 hover:text-white flex items-center gap-1">
-                                  <span>GitHub</span> <GithubIcon className="w-3.5 h-3.5" />
-                                </a>
-                              )}
+                              <div className="space-y-4 pt-4 border-t border-zinc-900">
+                                {Array.isArray(techList) && techList.length > 0 && (
+                                  <div className="flex flex-wrap gap-1.5">
+                                    {techList.map((tech: string) => (
+                                      <span key={tech} className="px-2.5 py-0.5 rounded-lg bg-zinc-900 text-[11px] font-mono text-zinc-400 border border-zinc-800">
+                                        {tech}
+                                      </span>
+                                    ))}
+                                  </div>
+                                )}
+
+                                <div className="flex items-center gap-3 text-xs font-mono">
+                                  {proj.link && (
+                                    <a href={proj.link} target="_blank" rel="noreferrer" className="text-indigo-400 hover:text-indigo-300 flex items-center gap-1">
+                                      <span>Live Demo</span> <ExternalLink className="w-3.5 h-3.5" />
+                                    </a>
+                                  )}
+                                  {proj.github && (
+                                    <a href={proj.github} target="_blank" rel="noreferrer" className="text-zinc-400 hover:text-white flex items-center gap-1">
+                                      <span>GitHub</span> <GithubIcon className="w-3.5 h-3.5" />
+                                    </a>
+                                  )}
+                                </div>
+                              </div>
                             </div>
-                          </div>
+                          );
+                        })
+                      ) : (
+                        <div className="col-span-full p-8 rounded-3xl border border-zinc-800 bg-zinc-950/60 text-center text-zinc-400">
+                          No projects configured yet.
                         </div>
-                      ))
-                    ) : (
-                      <div className="col-span-full p-8 rounded-3xl border border-zinc-800 bg-zinc-950/60 text-center text-zinc-400">
-                        No projects configured yet.
-                      </div>
-                    )}
+                      );
+                    })()}
                   </div>
                 </div>
               )}
@@ -310,24 +343,41 @@ export default async function PublicPortfolioPage({ params }: PortfolioPageProps
                   </div>
 
                   <div className="space-y-6">
-                    {Array.isArray(content.items) && content.items.length > 0 ? (
-                      content.items.map((exp: any, idx: number) => (
-                        <div key={idx} className="p-6 rounded-3xl border border-zinc-800 bg-zinc-950/80 space-y-3">
-                          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 border-b border-zinc-900 pb-3">
-                            <div>
-                              <h3 className="text-lg font-bold text-white">{exp.role}</h3>
-                              <div className="text-sm font-mono text-indigo-400">{exp.company}</div>
+                    {(() => {
+                      const expList = Array.isArray(content.jobs) ? content.jobs : (Array.isArray(content.items) ? content.items : []);
+                      return expList.length > 0 ? (
+                        expList.map((exp: any, idx: number) => {
+                          const highlights = exp.highlights || (exp.description ? [exp.description] : []);
+                          return (
+                            <div key={idx} className="p-6 rounded-3xl border border-zinc-800 bg-zinc-950/80 space-y-3">
+                              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 border-b border-zinc-900 pb-3">
+                                <div>
+                                  <h3 className="text-lg font-bold text-white">{exp.role}</h3>
+                                  <div className="text-sm font-mono text-indigo-400">{exp.company}</div>
+                                </div>
+                                <span className="text-xs font-mono text-zinc-500">{exp.duration || exp.period}</span>
+                              </div>
+                              {Array.isArray(highlights) && highlights.length > 0 ? (
+                                <ul className="space-y-1.5 text-sm text-zinc-400 font-light leading-relaxed">
+                                  {highlights.map((hl: string, hIdx: number) => (
+                                    <li key={hIdx} className="flex items-start gap-2">
+                                      <span className="text-indigo-500 font-bold">•</span>
+                                      <span>{hl}</span>
+                                    </li>
+                                  ))}
+                                </ul>
+                              ) : (
+                                <p className="text-sm text-zinc-400 font-light leading-relaxed">{exp.description}</p>
+                              )}
                             </div>
-                            <span className="text-xs font-mono text-zinc-500">{exp.period}</span>
-                          </div>
-                          <p className="text-sm text-zinc-400 font-light leading-relaxed">{exp.description}</p>
+                          );
+                        })
+                      ) : (
+                        <div className="p-8 rounded-3xl border border-zinc-800 bg-zinc-950/60 text-center text-zinc-400">
+                          No experience items listed.
                         </div>
-                      ))
-                    ) : (
-                      <div className="p-8 rounded-3xl border border-zinc-800 bg-zinc-950/60 text-center text-zinc-400">
-                        No experience items listed.
-                      </div>
-                    )}
+                      );
+                    })()}
                   </div>
                 </div>
               )}
